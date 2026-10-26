@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tự đo thính lực · Hearing Lab</title>
+<style>
+:root{color-scheme:light;--bg:#f5f7f2;--ink:#243629;--muted:#59675d;--green:#345b42;--line:#d8e1d5;--orange:#af582f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}main{max-width:1050px;margin:auto;padding:28px 22px 60px}a{color:var(--green)}header{display:flex;justify-content:space-between;gap:20px;align-items:center}h1{font-size:32px;line-height:1.2;margin:7px 0 12px}h2{font-size:23px;margin:0 0 14px}h3{font-size:18px}p{margin:8px 0 16px}.eyebrow{letter-spacing:.15em;font-size:12px;font-weight:750;color:var(--green)}.muted,small{color:var(--muted)}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;margin:18px 0}.notice{border-left:4px solid #c78042;background:#fff7e9;padding:14px 18px;border-radius:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}button,.button{font:inherit;font-weight:650;border:1px solid var(--line);border-radius:10px;padding:11px 17px;background:#edf2e9;color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block}button.primary,.tabs button[aria-selected=true]{background:var(--green);color:white;border-color:var(--green)}button.danger{color:#a22c26;background:#fff2ee}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #d98d39;outline-offset:3px}label{display:block;margin:12px 0 6px}input:not([type=checkbox]),select,textarea{font:inherit;width:100%;padding:10px;border:1px solid #aebdaf;border-radius:8px;background:white;color:var(--ink)}textarea{min-height:75px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}[hidden]{display:none!important}.status{min-height:35px;font-size:19px;font-weight:650}.pill{display:inline-block;border-radius:20px;background:#eef3e9;padding:4px 12px;font-size:13px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}td,th{text-align:left;padding:10px;border-bottom:1px solid var(--line)}svg{display:block;width:100%;height:auto;max-height:420px}.sample{background:#f6f8f3;padding:14px;border-radius:10px;margin:12px 0}.history-item{border-top:1px solid var(--line);padding:16px 0}.progress{height:7px;border-radius:5px;background:#e7eee2;overflow:hidden;margin:14px 0}.progress>div{height:100%;background:var(--green);width:0;transition:width .2s}#storageWarning{position:sticky;top:0;z-index:3}footer{font-size:13px;color:var(--muted);margin-top:28px}@media(max-width:650px){.grid{grid-template-columns:1fr}header{display:block}main{padding:20px 14px}.card{padding:18px}h1{font-size:27px}}
+
+.calt input{width:96px;padding:7px}.calt td,.calt th{white-space:nowrap}.calt td button{padding:6px 11px}.calt td.num{font-variant-numeric:tabular-nums;color:var(--muted)}ol.steps li{margin:6px 0}#calMessages li{margin:4px 0}#calMessages.ok{color:#2c5a38}
+</style>
+</head>
+<body><main>
+<header><div><div class="eyebrow">HEARING LAB / TỰ KIỂM TRA</div><h1>Lắng nghe. Phản hồi. Theo dõi.</h1><p class="muted">Hai bài kiểm tra riêng cho âm đơn và lời nói trong nhiễu.</p></div><a href="Demo.html">Mở bản mô phỏng →</a></header>
+<div class="notice">Độ chính xác phụ thuộc toàn bộ chuỗi thiết bị, tai nghe, mức âm lượng và môi trường. Khi chưa hiệu chuẩn bằng coupler/ear simulator cho đúng mẫu tai nghe, kết quả chỉ dùng <b>dBFS theo biên độ đỉnh</b>, không phải dB HL và không dùng để chẩn đoán. Chỉ khi có hồ sơ hiệu chuẩn còn hạn (tab Hiệu chuẩn) và bạn chọn dùng nó, kết quả mới hiện theo dB HL. Dừng ngay nếu khó chịu.</div>
+<section class="card" id="intakePanel"><h2>Trước khi tự kiểm tra</h2>
+<p>Luồng tự đo của phiên bản này dành cho người từ 18 tuổi. Trả lời các câu dưới đây trước khi phát âm thanh. Đây là công cụ sàng lọc nghiên cứu có tham chiếu WHO, chưa được WHO chứng nhận.</p>
+<div class="grid">
+<div><label for="adult">Bạn từ 18 tuổi trở lên?</label><select id="adult"><option value="">Chọn câu trả lời</option><option value="yes">Có</option><option value="no">Không</option></select></div>
+<div><label for="sudden">Gần đây bạn có nghe giảm đột ngột, xảy ra trong vài giờ hoặc vài ngày?</label><select id="sudden"><option value="">Chọn câu trả lời</option><option value="yes">Có</option><option value="no">Không</option></select></div>
+<div><label for="earSymptoms">Bạn đang đau tai hoặc chảy dịch tai?</label><select id="earSymptoms"><option value="">Chọn câu trả lời</option><option value="yes">Có</option><option value="no">Không</option></select></div>
+<div><label for="difficulty">Bạn thấy khó nghe hoặc khó hiểu lời nói trong sinh hoạt?</label><select id="difficulty"><option value="">Chọn câu trả lời</option><option value="yes">Có</option><option value="no">Không</option></select></div>
+</div><label><input id="intakeReviewed" type="checkbox"> Tôi đã kiểm tra các câu trả lời. Thông tin này được lưu cùng kết quả trên trình duyệt; xuất JSON sẽ kèm thông tin này.</label>
+<p id="intakeMessage" class="notice" role="status" aria-live="polite"></p>
+<small>Chăm sóc tai: <a href="https://www.who.int/news-room/questions-and-answers/item/deafness-and-hearing-loss-ear-care/" target="_blank" rel="noopener">WHO</a>. Nghe giảm đột ngột: <a href="https://www.nidcd.nih.gov/health/sudden-deafness" target="_blank" rel="noopener">NIDCD</a>. Giới hạn 18 tuổi là phạm vi của phiên bản này, không phải quy định chung của WHO.</small></section>
+<div id="storageWarning" class="notice" role="alert" hidden></div>
+<nav class="tabs" aria-label="Các bài kiểm tra"><button data-tab="tone" aria-selected="true">01 · Âm đơn</button><button data-tab="speech" aria-selected="false">02 · Lời nói trong nhiễu</button><button data-tab="calibration" aria-selected="false">Hiệu chuẩn</button><button data-tab="history" aria-selected="false">Lịch sử</button></nav>
+<section id="tone" class="panel">
+<div id="toneSetup" class="card"><h2>Đo mức nghe tương đối theo tần số</h2><p>Quy trình sàng lọc tăng 5 dB/giảm 10 dB, xác nhận ngưỡng bằng phản hồi lặp lại trong chuỗi đi lên. Có đo lại 1.000 Hz và lượt im lặng để đánh giá độ tin cậy.</p>
+<div class="grid"><div><label for="ears">Tai kiểm tra</label><select id="ears"><option value="both">Cả hai tai, lần lượt trái → phải</option><option value="L">Tai trái</option><option value="R">Tai phải</option></select></div><div><label for="device">Ghi chú tai nghe / thiết bị</label><input id="device" maxlength="160" placeholder="Ví dụ: tai nghe có dây, laptop, volume 20%"></div></div>
+<p><small>Thứ tự: 1.000 → 2.000 → 3.000 → 4.000 → 6.000 → 8.000 → đo lại 1.000 → 500 → 250 Hz. Kiểm tra tắt chế độ mono để phân biệt trái/phải. Không đổi âm lượng hệ thống trong phiên.</small></p>
+<div class="grid"><div><label for="useCal">Đơn vị kết quả</label><select id="useCal"><option value="no">dBFS đỉnh (chưa hiệu chuẩn)</option><option value="yes" disabled>dB HL (dùng hồ sơ hiệu chuẩn)</option></select></div><div><p id="calStatus" class="muted" role="status"></p></div></div>
+<label><input id="calSame" type="checkbox"> Nếu dùng dB HL: tôi dùng đúng tai nghe, thiết bị, trình duyệt và mức âm lượng hệ thống như lúc hiệu chuẩn, đã tắt hiệu ứng âm thanh/EQ.</label>
+<div class="actions"><button id="checkL">Nghe thử bên trái</button><button id="checkR">Nghe thử bên phải</button></div>
+<label for="noiseMethod">Cách đánh giá nhiễu nền</label><select id="noiseMethod"><option value="self_report">Chỉ tự cảm nhận yên tĩnh — chưa đủ để phân mức WHO</option><option value="documented">Đã có đánh giá nhiễu nền phù hợp với phép đo thính lực</option></select>
+<label for="noiseDetails">Ghi nhận đánh giá môi trường</label><textarea id="noiseDetails" maxlength="600" placeholder="Nếu đã đánh giá: ghi ngày, người/đơn vị thực hiện, thiết bị, phương pháp/tiêu chuẩn, kết quả hoặc mã biên bản. Không dùng số đo microphone điện thoại chưa hiệu chuẩn để xác nhận đạt."></textarea>
+<label><input id="quiet" type="checkbox"> Tôi đã kiểm tra môi trường đủ yên tĩnh bằng phương pháp phù hợp và sẽ giữ nguyên vị trí tai nghe.</label>
+<label><input id="ready" type="checkbox"> Tôi đã kiểm tra đúng hai bên tai, ghi rõ thiết bị và chọn âm lượng nhỏ, dễ chịu.</label><button id="startTone" class="primary">Bắt đầu đo âm đơn</button></div>
+<div id="toneRun" class="card" hidden><span class="pill">Âm đơn · điều chỉnh theo phản hồi</span><h2 id="toneTitle"></h2><div class="progress"><div id="toneProgress"></div></div><p id="toneStatus" class="status" role="status" aria-live="polite"></p><p id="toneMeta" class="muted"></p><div class="actions"><button id="playTone" class="primary">Phát âm</button><button id="heard" disabled>Nghe thấy</button><button id="notHeard" disabled>Không nghe</button><button id="stopTone" class="danger">Dừng và lưu phần đã đo</button></div></div>
+</section>
+<section id="speech" class="panel" hidden>
+<div id="speechSetup" class="card"><h2>Nghe câu nói trong nhiễu</h2><p>Thêm ít nhất 3 file âm thanh sạch, mỗi file đi kèm đúng câu được đọc. Mỗi câu chỉ dùng một lần trong phiên. Đáp án được ẩn khi kiểm tra và hiện sau khi trả lời.</p><p class="muted">Bắt đầu ở +15 dB SNR. Đúng cả câu → giảm 3 dB; sai → tăng 3 dB. Đây là bài luyện thử: kết quả là điểm theo SNR, chưa phải ngưỡng SRT đã được xác thực. Bài này không phải hearWHO, không cho điểm hearWHO và không phân mức nghe kém WHO. <a href="https://www.who.int/news-room/questions-and-answers/item/deafness-and-hearing-loss-hearing-checks-and-the-hearwho-app" target="_blank" rel="noopener">Tìm hiểu hearWHO chính thức</a>.</p><div id="samples"></div><button id="addSample">+ Thêm câu nói</button><p><small>Chấp nhận định dạng trình duyệt giải mã được, tối đa 20 MB/file và 30 giây/câu. Âm thanh chỉ xử lý trên máy, không tải lên máy chủ. Nhiễu trắng được tạo trong ứng dụng.</small></p><button id="startSpeech" class="primary">Chuẩn bị và bắt đầu</button><p id="speechLoadStatus" role="status"></p></div>
+<div id="speechRun" class="card" hidden><span class="pill">Lời nói trong nhiễu · câu trả lời tự nhập</span><h2 id="speechTitle"></h2><p id="speechStatus" role="status" aria-live="polite" class="status"></p><div class="actions"><button id="playSpeech" class="primary">Phát câu nói</button></div><label for="answer">Bạn đã nghe được câu gì?</label><input id="answer" autocomplete="off" disabled placeholder="Nhập câu nghe được; để trống nếu không nghe rõ"><div class="actions"><button id="submitSpeech" disabled>Chấm câu trả lời</button><button id="nextSpeech" hidden>Câu tiếp theo</button><button id="stopSpeech" class="danger">Dừng và lưu phần đã làm</button></div><p id="speechFeedback" aria-live="polite"></p></div>
+</section>
+<section id="calibration" class="panel" hidden>
+<div class="card"><h2>Hiệu chuẩn tai nghe → dB HL</h2>
+<div class="notice"><b>An toàn:</b> âm hiệu chuẩn phát ở −10 dBFS, có thể rất lớn. Chỉ phát khi tai nghe đang đặt trên coupler / ear simulator, <b>không đeo vào tai</b>. Bắt đầu với âm lượng hệ thống thấp rồi tăng dần.</div>
+<label><input id="calCoupler" type="checkbox"> Tai nghe đã đặt trên coupler / ear simulator và không có người đang đeo.</label>
+<button type="button" onclick="stopSound();resetCalBtn();">Dừng âm hiệu chuẩn</button>
+<p>Hiệu chuẩn đổi mức phát (dBFS) thành dB HL cho <b>một bộ thiết bị cụ thể</b>: đúng máy, trình duyệt, đường ra âm thanh, tai nghe và mức âm lượng hệ thống. Đổi bất kỳ thứ nào thì hồ sơ hết giá trị. Ứng dụng không tự có giá trị RETSPL mặc định; bạn phải nhập từ tài liệu phù hợp.</p>
+<h3>Cần chuẩn bị</h3>
+<ul><li>Máy đo mức âm (sound level meter) đã được hiệu chuẩn, cùng coupler hoặc ear simulator đúng loại tai nghe (ốp tai hay nhét tai) theo dòng tiêu chuẩn IEC 60318.</li><li>RETSPL của đúng mẫu tai nghe và loại coupler, lấy từ phần phù hợp của ISO 389 / ANSI S3.6 hoặc tài liệu của hãng.</li><li>Phòng yên tĩnh hơn mức nhiễu nền của phép đo; âm lượng hệ thống cố định, tắt hiệu ứng, EQ, cân bằng âm lượng, chế độ mono.</li></ul>
+<h3>Quy trình</h3>
+<ol class="steps"><li>Điền thiết bị, nguồn RETSPL, ngày đo và thời hạn hiệu lực.</li><li>Đặt tai nghe lên coupler. Bấm ▶ ở từng tai và tần số, chờ số đo ổn định rồi nhập SPL (dB) đọc được.</li><li>Nhập RETSPL từng tần số. Bảng tự tính offset và dải dB HL đo được; xem cảnh báo bên dưới.</li><li>Bấm Lưu hồ sơ. Sau đó vào bài âm đơn và chọn đơn vị dB HL.</li></ol>
+<div class="grid"><div><label for="calTransducer">Tai nghe (hãng, mẫu, số seri)</label><input id="calTransducer" maxlength="160"></div><div><label for="calMeter">Máy đo, coupler / ear simulator, ngày hiệu chuẩn của chúng</label><input id="calMeter" maxlength="200"></div><div><label for="calSource">Nguồn RETSPL (tiêu chuẩn, bảng, mẫu tai nghe)</label><input id="calSource" maxlength="200"></div><div><label for="calOperator">Người thực hiện</label><input id="calOperator" maxlength="120"></div><div><label for="calDate">Ngày hiệu chuẩn</label><input id="calDate" type="date"></div><div><label for="calMonths">Hiệu lực (tháng, 1–24; khuyến nghị 12)</label><input id="calMonths" type="number" min="1" max="24" step="1" value="12"></div></div>
+<p id="calToneStatus" class="status" role="status" aria-live="polite"></p>
+<div class="table-wrap"><table id="calTable" class="calt"></table></div>
+<ul id="calMessages" role="status" aria-live="polite"></ul>
+<label><input id="calRemeasured" type="checkbox"> Tôi đã thực hiện đầy đủ số đo SPL bằng thiết bị đo trên bộ máy và tai nghe hiện tại. Ghi nhận môi trường này cho số đo mới.</label>
+<div class="actions"><button id="calSave" class="primary">Lưu hồ sơ</button><button id="calExport">Tải JSON</button><label class="button" for="calImport" style="margin:0">Nhập JSON</label><input id="calImport" type="file" accept="application/json,.json" hidden><button id="calDelete" class="danger">Xóa hồ sơ</button></div>
+<p><small>Sau khi hiệu chuẩn, nên kiểm tra sinh học định kỳ: để một người nghe bình thường đã biết rõ ngưỡng nghe làm bài; lệch hơn khoảng 10 dB ở bất kỳ tần số nào là dấu hiệu cần đo lại thiết bị. Hồ sơ chỉ lưu trên trình duyệt này.</small></p></div></section>
+<section id="history" class="panel" hidden><div class="card"><h2>Lịch sử trên thiết bị này</h2><p>Dữ liệu lưu trong trình duyệt hiện tại. Đổi trình duyệt, di chuyển trang hoặc xóa dữ liệu trình duyệt có thể làm lịch sử không còn hiển thị. Xuất JSON để giữ bản sao.</p><div id="historyList"></div></div></section>
+<section id="result" class="card" hidden><h2 id="resultTitle">Kết quả</h2><p id="resultSummary"></p><div id="whoResult" hidden></div><div id="chart"></div><div id="resultTable" class="table-wrap"></div><div class="actions"><button id="exportResult">Tải kết quả JSON</button><button id="newSession">Về phần chuẩn bị</button></div></section>
+<footer>Tham chiếu: <a href="https://www.who.int/publications/i/item/9789240020481" target="_blank" rel="noopener">WHO World report on hearing (2021), bảng 1.3</a> và <a href="https://www.who.int/publications/i/item/9789240032767" target="_blank" rel="noopener">Hearing screening: considerations for implementation</a>. Phân loại tham chiếu WHO không chứng minh độ chính xác lâm sàng hoặc chứng nhận sản phẩm.<br>Âm đơn dùng quy tắc 10 dB xuống / 5 dB lên và cần ít nhất hai phản hồi xác nhận trong chuỗi đi lên. Đo lại 1.000 Hz lệch quá 5 dB hoặc bấm “nghe thấy” ở lượt im lặng sẽ bị gắn cờ cần đo lại. Dù có hồ sơ hiệu chuẩn, đây vẫn là công cụ sàng lọc nghiên cứu, không thay máy đo thính lực và không dùng để chẩn đoán.</footer>
+</main>
+<script src="hearing-core.js"></script>
+<script>
+'use strict';
+const $=id=>document.getElementById(id), C=HearingCore, FREQS=[250,500,1000,2000,3000,4000,6000,8000], KEY='hearing-lab-sessions-v1';
+const TONE_ORDER=[{freq:1000,phase:'primary'},{freq:2000,phase:'primary'},{freq:3000,phase:'primary'},{freq:4000,phase:'primary'},{freq:6000,phase:'primary'},{freq:8000,phase:'primary'},{freq:1000,phase:'retest'},{freq:500,phase:'primary'},{freq:250,phase:'primary'}];
+let ctx=null, activeNodes=[], epoch=0, session=null, displayed=null, pointIndex=0, points=[], stair=null, waiting=false, busy=false, pendingCatch=false, catchCountdown=6, sampleCounter=0, speechBuffers=[], speechIndex=0, snr=15, pendingSpeech=null;
+let sessions=[];
+function warn(text){$('storageWarning').hidden=false;$('storageWarning').textContent=text;}
+try{const raw=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(raw))throw Error();sessions=raw.filter(s=>s&&s.schemaVersion===1&&Array.isArray(s.trials)&&Array.isArray(s.results));for(const s of sessions)if(s.status==='in_progress')s.status='interrupted';}catch(e){warn('Không đọc được lịch sử trình duyệt. Bạn vẫn có thể làm bài và tải JSON; dữ liệu cũ chưa được ghi đè.');}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(sessions));return true;}catch(e){warn('Chưa lưu được vào trình duyệt (bộ nhớ đầy hoặc bị chặn). Hãy tải JSON để giữ kết quả.');return false;}}
+function save(){if(!session)return;session.updatedAt=new Date().toISOString();const i=sessions.findIndex(s=>s.id===session.id);if(i<0)sessions.unshift(session);else sessions[i]=session;persist();}
+function createSession(type){return{schemaVersion:1,appVersion:'2.0-who-reference',intake:readIntake(),id:globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random()}`,type,status:'in_progress',startedAt:new Date().toISOString(),device:$('device').value.trim(),calibrated:false,unit:type==='tone'?'dBFS_peak':'dB_SNR',algorithm:type==='tone'?'ascending-5dB-down10dB-2-confirmations-with-catch-trials':'unique-sentence-exact-match-adaptive-3dB',trials:[],results:[]};}
+async function audio(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state!=='running')await ctx.resume();if(ctx.state!=='running')throw Error('Trình duyệt chưa cho phép phát âm thanh.');return ctx;}
+function stopSound(){epoch++;for(const n of activeNodes){try{n.stop();}catch{}try{n.disconnect();}catch{}}activeNodes=[];}
+function route(source,ear){const merger=ctx.createChannelMerger(2);source.connect(merger,0,ear==='L'?0:1);merger.connect(ctx.destination);return merger;}
+function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+async function tone(freq,level,ear,silent=false){const token=epoch;await audio();if(token!==epoch)return false;const delay=600+Math.random()*800,duration=1+Math.random();await wait(delay);if(token!==epoch)return false;if(silent){await wait(duration*1000);return token===epoch;}return new Promise(resolve=>{const source=ctx.createOscillator(),gain=ctx.createGain();source.frequency.value=freq;source.connect(gain);const merger=route(gain,ear),now=ctx.currentTime,amp=10**(level/20);gain.gain.setValueAtTime(0,now);gain.gain.linearRampToValueAtTime(amp,now+.05);gain.gain.setValueAtTime(amp,now+duration-.05);gain.gain.linearRampToValueAtTime(0,now+duration);activeNodes.push(source);source.onended=()=>{gain.disconnect();merger.disconnect();activeNodes=activeNodes.filter(n=>n!==source);resolve(token===epoch);};source.start(now);source.stop(now+duration);});}
+function setTab(name){if(session)return;stopSound();resetCalBtn();for(const p of document.querySelectorAll('.panel'))p.hidden=p.id!==name;for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-selected',String(b.dataset.tab===name));$('result').hidden=true;if(name==='history')renderHistory();}
+for(const b of document.querySelectorAll('[data-tab]'))b.onclick=()=>setTab(b.dataset.tab);
+function lockTabs(lock){for(const field of $('intakePanel').querySelectorAll('input,select'))field.disabled=lock;for(const b of document.querySelectorAll('[data-tab]'))b.disabled=lock;}
+for(const ear of ['L','R'])$('check'+ear).onclick=async()=>{if(busy||session||!checkIntake())return;busy=true;try{await tone(1000,-36,ear);}catch(e){warn(e.message);}finally{busy=false;}};
+$('startTone').onclick=()=>{if(session||busy||!checkIntake())return;if(!$('device').value.trim()){alert('Hãy ghi rõ thiết bị, mẫu tai nghe và mức âm lượng để có thể lặp lại phép đo.');return;}if(!$('quiet').checked||!$('ready').checked){alert('Hãy xác nhận môi trường, hai bên tai và âm lượng trước khi bắt đầu.');return;}stopSound();const ears=$('ears').value==='both'?['L','R']:[$('ears').value];points=ears.flatMap(ear=>TONE_ORDER.map(p=>({...p,ear})));pointIndex=0;if($('useCal').value==='yes'){const gate=calGate(ears);if(!gate.ok){alert(gate.message);return;}calPlan=gate.plan;}else calPlan=null;stair=newStair(points[0]);catchCountdown=5+Math.floor(Math.random()*4);session=createSession('tone');if(calPlan){session.calibrated=true;session.unit='dB_HL';session.calibration={profile:JSON.parse(JSON.stringify(cal)),plan:JSON.parse(JSON.stringify(calPlan)),referenceDbfs:C.CAL_REF,splCapDb:C.SPL_CAP};}session.config={frequencies:FREQS,order:TONE_ORDER,ears,minDbFS:C.MIN,maxDbFS:C.MAX,initialDbFS:-35,toneDurationSeconds:'random 1-2',intervalBeforeToneSeconds:'random 0.6-1.4',procedure:'10 dB down / 5 dB up; threshold requires >=2 ascending responses',environmentConfirmed:true,calibrationSetupConfirmed:!!calPlan&&$('calSame').checked,audioEnvironment:envInfo(),noiseAssessment:{method:$('noiseMethod').value,details:$('noiseDetails').value.trim()}};save();lockTabs(true);$('result').hidden=true;$('toneSetup').hidden=true;$('toneRun').hidden=false;renderTone();};
+function renderTone(){const p=points[pointIndex],repeat=p.phase==='retest'?' · kiểm tra lại':'';$('toneTitle').textContent=`Tai ${p.ear==='L'?'trái':'phải'} · ${p.freq.toLocaleString('vi')} Hz${repeat}`;$('toneMeta').textContent=`Điểm ${pointIndex+1}/${points.length} · Lượt ${stair.trials+1}/40 · ${calPlan?C.toHL(stair.level,calPlan[p.ear][p.freq].offset)+' dB HL':stair.level+' dBFS (đỉnh)'}`;$('toneProgress').style.width=`${100*pointIndex/points.length}%`;$('toneStatus').textContent='Bấm phát, chờ tín hiệu kết thúc rồi trả lời. Một số lượt có thể im lặng.';waiting=false;$('playTone').disabled=false;$('heard').disabled=$('notHeard').disabled=true;}
+$('playTone').onclick=async()=>{if(!session||session.type!=='tone'||waiting||busy)return;busy=true;const id=session.id,p=points[pointIndex];pendingCatch=--catchCountdown<=0;$('playTone').disabled=true;$('toneStatus').textContent='Hãy tập trung…';try{const ok=await tone(p.freq,stair.level,p.ear,pendingCatch);if(!ok||session?.id!==id)return;waiting=true;$('heard').disabled=$('notHeard').disabled=false;$('toneStatus').textContent='Bạn có nghe thấy âm trong lượt vừa rồi không?';}catch(e){$('toneStatus').textContent=e.message;$('playTone').disabled=false;}finally{busy=false;}};
+function respond(heard){if(!session||session.type!=='tone'||!waiting)return;waiting=false;const p=points[pointIndex];if(pendingCatch){session.trials.push({...p,type:'catch',level:null,unit:'silent',heard,at:new Date().toISOString()});pendingCatch=false;catchCountdown=5+Math.floor(Math.random()*4);save();renderTone();return;}session.trials.push({...p,type:'tone',level:stair.level,levelHL:calPlan?C.toHL(stair.level,calPlan[p.ear][p.freq].offset):null,unit:'dBFS_peak',heard,direction:stair.direction,at:new Date().toISOString()});const outcome=C.advance(stair,heard);if(outcome){const pp=calPlan&&calPlan[p.ear][p.freq];session.results.push({...p,...outcome,ascending:{...stair.ascending},offset:pp?pp.offset:null,hl:pp&&outcome.level!==null?C.toHL(outcome.level,pp.offset):null,rangeHL:pp?[pp.minHL,pp.maxHL]:null});pointIndex++;if(pointIndex===points.length){finish('completed');return;}stair=newStair(points[pointIndex]);}save();renderTone();}
+$('heard').onclick=()=>respond(true);$('notHeard').onclick=()=>respond(false);$('stopTone').onclick=()=>finish('stopped');
+function addSample(){const row=document.createElement('div'),id=++sampleCounter;row.className='sample';row.innerHTML=`<label for="file${id}">File âm thanh</label><input id="file${id}" type="file" accept="audio/*"><label for="text${id}">Câu được đọc trong file</label><textarea id="text${id}" maxlength="500" placeholder="Ghi đúng transcript của file âm thanh"></textarea><button type="button">Bỏ câu này</button>`;row.querySelector('button').onclick=()=>row.remove();$('samples').appendChild(row);}
+$('addSample').onclick=addSample;for(let i=0;i<3;i++)addSample();
+$('startSpeech').onclick=async()=>{if(session||busy||!checkIntake())return;const rows=[...$('samples').children];if(rows.length<3){$('speechLoadStatus').textContent='Cần ít nhất 3 câu nói khác nhau.';return;}busy=true;$('startSpeech').disabled=true;$('speechLoadStatus').textContent='Đang kiểm tra và giải mã âm thanh…';const fields=[...$('speechSetup').querySelectorAll('input,textarea,button')];fields.forEach(x=>x.disabled=true);try{const items=rows.map(r=>({file:r.querySelector('input').files[0],text:r.querySelector('textarea').value.trim()}));if(items.some(x=>!x.file||!C.normalize(x.text)))throw Error('Mỗi câu cần có file âm thanh và transcript.');if(new Set(items.map(x=>C.normalize(x.text))).size!==items.length)throw Error('Hãy dùng các câu khác nhau để tránh nhớ đáp án.');await audio();speechBuffers=[];for(const item of items){if(item.file.size>20*1024*1024)throw Error('Mỗi file cần nhỏ hơn hoặc bằng 20 MB.');const buffer=await ctx.decodeAudioData(await item.file.arrayBuffer());if(buffer.duration<.3||buffer.duration>30)throw Error('Mỗi câu cần dài từ 0,3 đến 30 giây.');let energy=0;for(let c=0;c<buffer.numberOfChannels;c++)for(const x of buffer.getChannelData(c))energy+=x*x;if(energy/buffer.length/buffer.numberOfChannels<1e-10)throw Error('Có file im lặng. Hãy chọn lại.');speechBuffers.push({buffer,text:item.text,name:item.file.name});}for(let i=speechBuffers.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[speechBuffers[i],speechBuffers[j]]=[speechBuffers[j],speechBuffers[i]];}if(!C.intakeDecision(readIntake()).allowed)throw Error('Thông tin sức khỏe đã thay đổi; hãy kiểm tra hướng dẫn trước khi bắt đầu.');session=createSession('speech');session.config={noise:'synthetic_white',initialSNR:15,stepDB:3,scoring:'whole-sentence; ignore case, punctuation and whitespace; preserve Vietnamese accents',sampleCount:speechBuffers.length};speechIndex=0;snr=15;$('speechLoadStatus').textContent='';save();lockTabs(true);$('speechSetup').hidden=true;$('speechRun').hidden=false;$('result').hidden=true;renderSpeech();}catch(e){$('speechLoadStatus').textContent='Chưa bắt đầu: '+e.message;}finally{busy=false;fields.forEach(x=>x.disabled=false);}};
+function renderSpeech(){pendingSpeech=null;waiting=false;$('speechTitle').textContent=`Câu ${speechIndex+1}/${speechBuffers.length} · SNR ${snr>0?'+':''}${snr} dB`;$('speechStatus').textContent='Bấm phát câu nói, sau đó nhập điều bạn nghe được.';$('answer').value='';$('answer').disabled=true;$('submitSpeech').disabled=true;$('playSpeech').disabled=false;$('nextSpeech').hidden=true;$('speechFeedback').textContent='';}
+$('playSpeech').onclick=async()=>{if(!session||session.type!=='speech'||busy||waiting)return;busy=true;const id=session.id,token=epoch;$('playSpeech').disabled=true;$('speechStatus').textContent='Đang phát câu nói…';try{await audio();if(session?.id!==id||token!==epoch)return;const item=speechBuffers[speechIndex],buffer=item.buffer,mono=new Float32Array(buffer.length),noise=new Float32Array(buffer.length);for(let c=0;c<buffer.numberOfChannels;c++){const ch=buffer.getChannelData(c);for(let i=0;i<mono.length;i++)mono[i]+=ch[i]/buffer.numberOfChannels;}for(let i=0;i<noise.length;i++)noise[i]=Math.random()*2-1;const mixed=C.mix(mono,noise,snr),output=ctx.createBuffer(1,mono.length,buffer.sampleRate);output.copyToChannel(mixed.data,0);pendingSpeech={snr,file:item.name,expected:item.text,durationSeconds:buffer.duration,sampleRate:buffer.sampleRate,mixScale:mixed.scale};await new Promise(resolve=>{const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=output;source.connect(gain);gain.connect(ctx.destination);const now=ctx.currentTime,d=buffer.duration;gain.gain.setValueAtTime(0,now);gain.gain.linearRampToValueAtTime(1,now+.01);gain.gain.setValueAtTime(1,now+d-.01);gain.gain.linearRampToValueAtTime(0,now+d);activeNodes.push(source);source.onended=()=>{gain.disconnect();activeNodes=activeNodes.filter(n=>n!==source);resolve();};source.start();});if(session?.id!==id||token!==epoch)return;waiting=true;$('answer').disabled=false;$('submitSpeech').disabled=false;$('answer').focus();$('speechStatus').textContent='Nhập câu bạn nghe được, rồi bấm chấm câu trả lời.';}catch(e){$('speechStatus').textContent=e.message;$('playSpeech').disabled=false;}finally{busy=false;}};
+$('submitSpeech').onclick=()=>{if(!session||session.type!=='speech'||!waiting||!pendingSpeech)return;waiting=false;const answer=$('answer').value,correct=C.normalize(answer)===C.normalize(pendingSpeech.expected);session.trials.push({...pendingSpeech,answer,correct,at:new Date().toISOString()});session.results.push({sentence:speechIndex+1,snr,correct});save();$('answer').disabled=true;$('submitSpeech').disabled=true;$('speechFeedback').textContent=`${correct?'Đúng cả câu.':'Chưa đúng cả câu.'} Đáp án: ${pendingSpeech.expected}`;$('speechStatus').textContent='Đã ghi nhận. Chấm theo toàn câu, bỏ qua viết hoa và dấu câu; giữ dấu tiếng Việt.';snr=C.nextSNR(snr,correct);$('nextSpeech').hidden=false;$('nextSpeech').textContent=speechIndex+1===speechBuffers.length?'Xem kết quả':'Câu tiếp theo';};
+$('answer').onkeydown=e=>{if(e.key==='Enter')$('submitSpeech').click();};
+$('nextSpeech').onclick=()=>{if(!session||session.type!=='speech')return;speechIndex++;if(speechIndex===speechBuffers.length)finish('completed');else renderSpeech();};$('stopSpeech').onclick=()=>finish('stopped');
+function finish(status){if(!session)return;stopSound();waiting=false;session.status=status;session.endedAt=new Date().toISOString();if(session.type==='tone'){session.quality=C.assessToneQuality(session.results,session.trials,session.config.ears);session.interpretation=C.whoReport(session);}save();const completed=session;session=null;busy=false;lockTabs(false);$('toneRun').hidden=$('speechRun').hidden=true;$('toneSetup').hidden=$('speechSetup').hidden=false;showResult(completed);}
+function table(headers,rows){const t=document.createElement('table'),head=document.createElement('tr');for(const h of headers){const th=document.createElement('th');th.textContent=h;head.appendChild(th);}t.appendChild(head);for(const row of rows){const tr=document.createElement('tr');for(const cell of row){const td=document.createElement('td');td.textContent=cell;tr.appendChild(td);}t.appendChild(tr);}return t;}
+function readIntake(){
+  const value=id=>$(id).value===''?null:$(id).value==='yes';
+  return {adult:value('adult'),sudden:value('sudden'),earSymptoms:value('earSymptoms'),difficulty:value('difficulty'),reviewed:$('intakeReviewed').checked};
+}
+function checkIntake(){
+  const decision=C.intakeDecision(readIntake());
+  $('intakeMessage').textContent=decision.message;
+  if(!decision.allowed)$('intakeMessage').scrollIntoView({behavior:'smooth',block:'center'});
+  return decision.allowed;
+}
+for(const field of $('intakePanel').querySelectorAll('input,select'))field.addEventListener('change',()=>{$('intakeMessage').textContent=C.intakeDecision(readIntake()).message;});
+$('intakeMessage').textContent='Hãy trả lời đầy đủ trước khi bắt đầu. Nếu nghe giảm đột ngột, hãy đi khám ngay.';
+function renderWhoReport(s){
+  const box=$('whoResult');box.replaceChildren();box.hidden=s.type!=='tone';if(box.hidden)return;
+  const r=C.whoReport(s),add=(tag,text)=>{const node=document.createElement(tag);node.textContent=text;box.appendChild(node);return node;};
+  add('h3','Tham chiếu phân mức WHO 2021');
+  if(!r.eligible){
+    add('p','Chưa đủ điều kiện phân mức nghe kém.');
+    const list=add('ul','');for(const reason of r.blockers){const item=document.createElement('li');item.textContent=reason;list.appendChild(item);}
+  }else{
+    const fmt=v=>v.toLocaleString('vi-VN',{maximumFractionDigits:3});
+    box.appendChild(table(['Chỉ số','Giá trị'],[['PTA4 tai trái',fmt(r.pta4.L)+' dB HL'],['PTA4 tai phải',fmt(r.pta4.R)+' dB HL'],['Tai nghe tốt hơn',r.betterEar==='equal'?'Hai tai bằng nhau':r.betterEar==='L'?'Trái':'Phải'],['Phân mức theo tai tốt hơn',r.grade.label],['Tiêu chí nghe kém một bên WHO',r.unilateral?'Có dấu hiệu: tai tốt <20 và tai còn lại ≥35 dB HL':'Không đạt tiêu chí PTA4 này'] ]));
+    add('p','PTA4 = trung bình ngưỡng 500, 1.000, 2.000, 4.000 Hz. Chỉ dùng lần đo chính; không làm tròn trước khi phân mức. “Bình thường theo PTA4” không có nghĩa mọi tần số và cả hai tai đều bình thường.');
+    add('p','Đây là phân mức tham chiếu từ ngưỡng sàng lọc chưa có che lấp tai đối bên; chưa xác định kiểu mất thính lực. Bước đo 5 dB và sai số thiết bị có thể làm thay đổi nhóm khi kết quả gần ranh giới.');
+  }
+  add('p',r.recommendation).className='notice';
+  const details=add('details',''),summary=document.createElement('summary');summary.textContent='Bảng phân mức và phạm vi áp dụng';details.appendChild(summary);
+  details.appendChild(table(['PTA4 tai tốt hơn (dB HL)','Phân mức'],C.WHO_GRADES.map(g=>[g.min===null?'< 20':g.max===null?'≥ 95':g.min+' đến < '+g.max,g.label])));
+  const note=document.createElement('p');note.textContent='Các bước kiểm tra chất lượng, giới hạn tuổi và điều kiện chặn của ứng dụng là lựa chọn triển khai thận trọng; không phải chứng nhận hoặc quy trình được WHO thẩm định. Thông tin môi trường do người dùng nhập chưa được xác minh độc lập.';details.appendChild(note);
+  const link=document.createElement('a');link.href=C.WHO_SOURCE;link.target='_blank';link.rel='noopener';link.textContent='Nguồn: WHO World report on hearing (2021), bảng 1.3';details.appendChild(link);
+}
+function levelText(r,hlMode){if(hlMode){const v=r.hl===null||r.hl===undefined?null:String(Math.round(r.hl*10)/10);if(v===null)return 'Chưa xác định';if(r.kind==='estimate')return v;if(r.kind==='below_range')return '≤ '+v;if(r.kind==='above_range')return '> '+v;return 'Chưa xác định';}if(r.kind==='estimate')return r.level.toFixed(1);if(r.kind==='below_range')return '≤ '+r.level;if(r.kind==='above_range')return '> '+r.level;return 'Chưa xác định';}
+function showResult(s){displayed=s;$('result').hidden=false;$('resultTitle').textContent=s.type==='tone'?(s.calibrated?'Kết quả sàng lọc âm đơn · dB HL':'Kết quả mức nghe tương đối · dBFS'):'Kết quả nghe lời nói trong nhiễu';const status={completed:'Hoàn thành',stopped:'Đã dừng sớm',interrupted:'Phiên bị gián đoạn',in_progress:'Đang đo'}[s.status]||s.status;$('resultTable').replaceChildren();$('chart').replaceChildren();renderWhoReport(s);if(s.type==='tone'){const q=C.assessToneQuality(s.results,s.trials,s.config?.ears),retest=Object.values(q.retests||{}),retestText=retest.length?retest.map(r=>`${r.difference} dB`).join(', '):'chưa đủ',quality=q.reliable?'Độ tin cậy nội bộ đạt':'CẦN ĐO LẠI / kiểm tra điều kiện';$('resultSummary').textContent=`${status} · ${quality}. Lượt im lặng: ${q.falsePositives}/${q.catches} báo nghe; chênh đo lại 1.000 Hz: ${retestText}. ${s.results.length} điểm đã kết thúc. ${s.calibrated?`Đơn vị dB HL theo hồ sơ “${s.calibration.profile.transducer}” (hạn ${new Date(s.calibration.profile.expiresAt).toLocaleDateString('vi-VN')}); chỉ đúng với đúng thiết bị và âm lượng lúc hiệu chuẩn, là sàng lọc, không thay chẩn đoán.`:'Đơn vị dBFS đỉnh, chưa hiệu chuẩn; không quy đổi sang dB HL.'}`;$('resultTable').appendChild(table(['Tai','Hz','Lần đo',s.calibrated?'Ngưỡng (dB HL)':'Mức tương đối (dBFS)','Số lượt'],s.results.map(r=>[r.ear==='L'?'Trái':'Phải',r.freq,r.phase==='retest'?'Kiểm tra lại':'Chính',levelText(r,s.calibrated),r.trials])));drawChart(s.results,s.calibrated);}else{const n=s.trials.length,correct=s.trials.filter(t=>t.correct).length;$('resultSummary').textContent=`${status} · Đúng ${correct}/${n} câu${n?' ('+Math.round(correct/n*100)+'%)':''}. SNR thay đổi giữa các câu; điểm này chưa phải ngưỡng SRT hay audiogram.`;$('resultTable').appendChild(table(['Câu','SNR (dB)','Kết quả'],s.results.map(r=>[r.sentence,r.snr,r.correct?'Đúng':'Sai'])));} $('result').scrollIntoView({behavior:'smooth'});}
+function drawChart(results,hlMode){let lo=C.MIN,hi=C.MAX;if(hlMode){const hls=results.filter(r=>r.rangeHL).flatMap(r=>r.rangeHL);lo=-10;hi=Math.max(60,Math.ceil(Math.max(...hls,0)/10)*10);}const val=r=>hlMode?r.hl:r.level;const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 720 340');svg.setAttribute('role','img');svg.setAttribute('aria-label','Mức nghe tương đối theo tần số, chi tiết trong bảng bên dưới');const el=(name,attrs,text)=>{const n=document.createElementNS(ns,name);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);if(text!==undefined)n.textContent=text;svg.appendChild(n);return n;},x=f=>85+(Math.log2(f/250)/5)*580,y=l=>40+(l-lo)/(hi-lo)*230;for(let db=lo;db<=hi;db+=10){el('line',{x1:85,x2:665,y1:y(db),y2:y(db),stroke:'#dde4d9'});el('text',{x:72,y:y(db)+5,'text-anchor':'end',fill:'#59675d','font-size':12},db);}for(const f of FREQS){el('line',{x1:x(f),x2:x(f),y1:40,y2:270,stroke:'#e8ede5'});el('text',{x:x(f),y:294,'text-anchor':'middle','font-size':12},f);}el('text',{x:85,y:20,'font-size':13},hlMode?'dB HL · nghe kém hơn xuống dưới':'dBFS đỉnh · mức tín hiệu tăng xuống dưới');el('text',{x:650,y:319,'font-size':13},'Hz');for(const ear of ['L','R']){const color=ear==='L'?'#3269a8':'#b65035';let prev=null;for(const f of FREQS){const r=results.find(r=>r.ear===ear&&r.freq===f&&r.phase==='primary');if(!r||r.kind!=='estimate'){prev=null;continue;}if(prev)el('line',{x1:x(prev.freq),x2:x(f),y1:y(val(prev)),y2:y(val(r)),stroke:color,'stroke-width':2});el('circle',{cx:x(f),cy:y(val(r)),r:5,fill:color});prev=r;}}el('text',{x:100,y:325,fill:'#3269a8','font-size':13},'● Tai trái');el('text',{x:220,y:325,fill:'#b65035','font-size':13},'● Tai phải');$('chart').appendChild(svg);}
+function download(s){const blob=new Blob([JSON.stringify(s.type==='tone'?{...s,interpretation:C.whoReport(s)}:s,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`hearing-${s.type}-${s.id}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('exportResult').onclick=()=>displayed&&download(displayed);$('newSession').onclick=()=>{const type=displayed?.type==='speech'?'speech':'tone';setTab(type);window.scrollTo({top:0,behavior:'smooth'});};
+function renderHistory(){const box=$('historyList');box.replaceChildren();if(!sessions.length){box.textContent='Chưa có phiên đo được lưu.';return;}for(const s of sessions){const row=document.createElement('div');row.className='history-item';const p=document.createElement('p');p.textContent=`${s.type==='tone'?'Âm đơn':'Lời nói'} · ${new Date(s.startedAt).toLocaleString('vi-VN')} · ${s.trials.length} lượt${s.calibrated?' · dB HL':''} · ${{completed:'Hoàn thành',stopped:'Dừng sớm',interrupted:'Gián đoạn',in_progress:'Đang đo'}[s.status]||s.status}`;row.appendChild(p);const actions=document.createElement('div');actions.className='actions';for(const[label,fn]of [['Xem kết quả',()=>showResult(s)],['Tải JSON',()=>download(s)],['Xóa phiên',()=>{if(confirm('Xóa phiên này khỏi lịch sử trình duyệt?')){sessions=sessions.filter(x=>x.id!==s.id);persist();renderHistory();if(displayed?.id===s.id)$('result').hidden=true;}}]]){const b=document.createElement('button');b.textContent=label;b.onclick=fn;actions.appendChild(b);}row.appendChild(actions);box.appendChild(row);}}
+function pausePlayback(){if(!session)return;stopSound();waiting=false;busy=false;if(session.type==='tone'){$('heard').disabled=$('notHeard').disabled=true;$('playTone').disabled=false;$('toneStatus').textContent='Âm đã dừng khi rời trang. Bấm phát lại để tiếp tục.';}else if(!$('nextSpeech').hidden){return;}else{pendingSpeech=null;$('answer').disabled=true;$('submitSpeech').disabled=true;$('playSpeech').disabled=false;$('speechStatus').textContent='Âm đã dừng khi rời trang. Bấm phát lại để tiếp tục.';}}
+
+// ---------------- Hiệu chuẩn ----------------
+const CAL_KEY='hearing-lab-calibration-v1';
+let cal=null, calPlan=null, calPlaying=null;
+function newStair(p){return calPlan?C.staircase(calPlan[p.ear][p.freq]):C.staircase();}
+function loadCal(){try{const raw=JSON.parse(localStorage.getItem(CAL_KEY)||'null');if(raw&&typeof raw==='object'&&raw.schemaVersion===1&&raw.measured&&raw.retspl)cal=raw;}catch(e){warn('Không đọc được hồ sơ hiệu chuẩn đã lưu.');}}
+function persistCal(){try{if(cal)localStorage.setItem(CAL_KEY,JSON.stringify(cal));else localStorage.removeItem(CAL_KEY);return true;}catch(e){warn('Chưa lưu được hồ sơ hiệu chuẩn vào trình duyệt. Hãy tải JSON để giữ bản sao.');return false;}}
+function envInfo(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return{sampleRate:ctx.sampleRate,userAgent:navigator.userAgent};}
+function buildCalTable(){
+ const t=$('calTable');t.replaceChildren();
+ const head=document.createElement('tr');
+ for(const h of ['Hz','RETSPL (dB SPL)','Tai trái','SPL đo (dB)','Tai phải','SPL đo (dB)','Offset T / P (dB)','Dải đo T / P (dB HL)']){const th=document.createElement('th');th.textContent=h;head.appendChild(th);}
+ t.appendChild(head);
+ for(const f of C.FREQS){
+  const row=document.createElement('tr'),cell=()=>{const c=document.createElement('td');row.appendChild(c);return c;};
+  const num=(id,label)=>{const i=document.createElement('input');i.type='number';i.step='0.1';i.id=id;i.setAttribute('aria-label',label);i.oninput=refreshCal;return i;};
+  const play=(ear)=>{const b=document.createElement('button');b.type='button';b.textContent='▶';b.setAttribute('aria-pressed','false');b.setAttribute('aria-label',`Phát âm hiệu chuẩn tai ${ear==='L'?'trái':'phải'} ${f} Hz`);b.onclick=()=>toggleCalTone(f,ear,b);return b;};
+  cell().textContent=f;
+  cell().appendChild(num('rs-'+f,`RETSPL ${f} Hz`));
+  cell().appendChild(play('L'));cell().appendChild(num(`m-L-${f}`,`SPL đo tai trái ${f} Hz`));
+  cell().appendChild(play('R'));cell().appendChild(num(`m-R-${f}`,`SPL đo tai phải ${f} Hz`));
+  const off=cell(),rng=cell();off.id='off-'+f;rng.id='rng-'+f;off.className=rng.className='num';
+  t.appendChild(row);
+ }
+}
+function fillCal(){
+ const c=cal||{};
+ $('calTransducer').value=c.transducer||'';$('calMeter').value=c.meter||'';$('calSource').value=c.retsplSource||'';$('calOperator').value=c.operator||'';
+ $('calDate').value=c.date||new Date().toISOString().slice(0,10);$('calMonths').value=c.validityMonths||12;
+ for(const f of C.FREQS){$('rs-'+f).value=c.retspl&&c.retspl[f]!==undefined?c.retspl[f]:'';for(const ear of ['L','R'])$(`m-${ear}-${f}`).value=c.measured&&c.measured[ear]&&c.measured[ear][f]!==undefined?c.measured[ear][f]:'';}
+ refreshCal();
+}
+function readProfile(){
+ const measured={L:{},R:{}},retspl={};
+ for(const f of C.FREQS){retspl[f]=$('rs-'+f).value;for(const ear of ['L','R'])measured[ear][f]=$(`m-${ear}-${f}`).value;}
+ const date=$('calDate').value,months=Math.max(1,Math.min(24,parseInt($('calMonths').value,10)||12));
+  let expiresAt='';if(date){const d=new Date(date+'T00:00:00');d.setMonth(d.getMonth()+months);expiresAt=d.toISOString();}
+  if(cal && cal.date===date && (cal.validityMonths||12)===months && cal.expiresAt)expiresAt=cal.expiresAt;
+ return{schemaVersion:1,transducer:$('calTransducer').value.trim(),meter:$('calMeter').value.trim(),operator:$('calOperator').value.trim(),retsplSource:$('calSource').value.trim(),date,validityMonths:months,expiresAt,measured,retspl,env:cal&&cal.env?cal.env:null};
+}
+function profileProblems(p){
+ return C.validateCalibration(p).problems;
+}
+function refreshCal(){
+ const p=readProfile();
+ for(const f of C.FREQS){
+  const ok=ear=>p.measured[ear][f]!==''&&p.retspl[f]!==''&&Number.isFinite(Number(p.measured[ear][f]))&&Number.isFinite(Number(p.retspl[f]));
+  const pl=ear=>ok(ear)?C.pointPlan(p.measured[ear][f],p.retspl[f]):null,L=pl('L'),R=pl('R');
+  $('off-'+f).textContent=`${L?L.offset:'–'} / ${R?R.offset:'–'}`;
+  $('rng-'+f).textContent=`${L?L.minHL+'…'+L.maxHL:'–'} / ${R?R.minHL+'…'+R.maxHL:'–'}`;
+ }
+ const problems=profileProblems(p),box=$('calMessages');box.replaceChildren();
+ const add=t=>{const li=document.createElement('li');li.textContent=t;box.appendChild(li);};
+ if(problems.length){box.className='';for(const t of problems.slice(0,8))add(t);if(problems.length>8)add(`… và ${problems.length-8} mục khác.`);}
+ else{box.className='ok';add('Số liệu đủ và hợp lý.');for(const t of C.floorWarnings(C.calibrationPlan(p)).slice(0,8))add('Cảnh báo: '+t);}
+}
+function updateCalStatus(){
+ const v=cal?C.validateCalibration(cal):null,sel=$('useCal'),yes=sel.querySelector('option[value=yes]');
+ let text;
+ if(!cal)text='Chưa có hồ sơ hiệu chuẩn: kết quả chỉ ở dBFS.';
+ else if(v.ok)text=`Hồ sơ hợp lệ: ${cal.transducer}, hết hạn ${new Date(cal.expiresAt).toLocaleDateString('vi-VN')}.`;
+ else text=`Hồ sơ chưa dùng được: ${v.problems[0]}`;
+ $('calStatus').textContent=text;yes.disabled=!(v&&v.ok);if(yes.disabled)sel.value='no';
+}
+function calGate(ears){
+ const v=C.validateCalibration(cal);
+ if(!v.ok)return{ok:false,message:'Hồ sơ hiệu chuẩn chưa dùng được:\n'+v.problems.slice(0,5).join('\n')};
+ if(!$('calSame').checked)return{ok:false,message:'Hãy xác nhận bạn dùng đúng tai nghe, thiết bị, trình duyệt và mức âm lượng hệ thống như lúc hiệu chuẩn.'};
+ const issues=C.environmentMatches(cal,envInfo());
+ if(issues.length)return{ok:false,message:'Điều kiện khác lúc hiệu chuẩn:\n'+issues.join('\n')+'\nHãy hiệu chuẩn lại trên thiết lập này.'};
+ const plan=C.calibrationPlan(cal);
+ if(ears.some(ear=>C.FREQS.some(f=>!plan[ear][f].usable)))return{ok:false,message:'Có tần số không còn khoảng mức phát khả dụng:\n'+C.floorWarnings(plan,ears).filter(x=>x.includes('khả dụng')).slice(0,4).join('\n')};
+ const w=C.floorWarnings(plan,ears);
+ if(w.length&&!confirm('Dải đo bị giới hạn:\n'+w.slice(0,4).join('\n')+'\n\nTiếp tục với giới hạn này?'))return{ok:false,message:'Đã hủy. Hãy chỉnh âm lượng và hiệu chuẩn lại.'};
+ return{ok:true,plan};
+}
+async function toggleCalTone(f,ear,btn){
+ if(session||busy)return;
+ if(!$('calCoupler').checked){$('calToneStatus').textContent='Hãy xác nhận tai nghe đã đặt trên coupler, không đeo vào tai.';return;}
+ if(calPlaying&&calPlaying.f===f&&calPlaying.ear===ear){stopCalTone();return;}
+ stopCalTone();
+ busy=true;const token=epoch;
+ try{
+  await audio();
+  if(token!==epoch)return;
+  const source=ctx.createOscillator(),gain=ctx.createGain();source.frequency.value=f;source.connect(gain);
+  const merger=route(gain,ear),now=ctx.currentTime,amp=10**(C.CAL_REF/20);
+  gain.gain.setValueAtTime(0,now);gain.gain.linearRampToValueAtTime(amp,now+.05);
+  activeNodes.push(source);calPlaying={f,ear,btn,source,gain};
+  btn.textContent='■';btn.setAttribute('aria-pressed','true');
+  $('calToneStatus').textContent=`Đang phát ${f} Hz, tai ${ear==='L'?'trái':'phải'}, ${C.CAL_REF} dBFS đỉnh. Tự dừng sau 10 giây.`;
+  source.onended=()=>{try{gain.disconnect();merger.disconnect();}catch{}activeNodes=activeNodes.filter(n=>n!==source);if(calPlaying&&calPlaying.source===source)resetCalBtn();};
+  source.start(now);source.stop(now+10);
+ }catch(e){warn(e.message);}finally{busy=false;}
+}
+function stopCalTone(){if(!calPlaying)return;const{source,gain}=calPlaying;try{const t=ctx.currentTime;gain.gain.cancelScheduledValues(t);gain.gain.setValueAtTime(gain.gain.value,t);gain.gain.linearRampToValueAtTime(0,t+.03);source.stop(t+.04);}catch{}}
+function resetCalBtn(){if(!calPlaying)return;calPlaying.btn.textContent='▶';calPlaying.btn.setAttribute('aria-pressed','false');calPlaying=null;$('calToneStatus').textContent='';}
+$('calSave').onclick=()=>{
+ const p=readProfile();
+ if($('calRemeasured').checked)p.env=envInfo();
+ const problems=profileProblems(p);
+ if(problems.length){$('calToneStatus').textContent='Chưa lưu hồ sơ: '+problems.slice(0,4).join(' ');return;}
+ p.savedAt=new Date().toISOString();cal=p;const stored=persistCal();$('calRemeasured').checked=false;updateCalStatus();refreshCal();
+ $('calToneStatus').textContent=stored?'Đã lưu hồ sơ. Môi trường gốc được giữ nguyên nếu chưa xác nhận đo lại.':'Hồ sơ chỉ có trong phiên hiện tại. Hãy tải JSON để giữ bản sao.';
+};
+$('calExport').onclick=()=>{const p=readProfile();p.env=cal&&cal.env?cal.env:null;download({type:'calibration',id:p.date||'profile',...p});};
+$('calDelete').onclick=()=>{if(!cal&&!$('calTransducer').value)return;if(!confirm('Xóa hồ sơ hiệu chuẩn trên trình duyệt này? Các phiên đã đo giữ nguyên bản sao hồ sơ của chúng.'))return;stopCalTone();cal=null;persistCal();fillCal();updateCalStatus();};
+$('calImport').onchange=async e=>{
+ const file=e.target.files[0];e.target.value='';if(!file)return;
+ try{
+  if(file.size>200*1024)throw Error('File quá lớn cho hồ sơ hiệu chuẩn.');
+  const raw=JSON.parse(await file.text());
+  if(!raw||typeof raw!=='object'||!raw.measured||!raw.retspl)throw Error('File không phải hồ sơ hiệu chuẩn.');
+  const keep=['transducer','meter','operator','retsplSource','date','validityMonths','expiresAt','measured','retspl','env'],p={schemaVersion:1};
+  for(const k of keep)if(raw[k]!==undefined)p[k]=raw[k];
+   const validation=C.validateCalibration(p);if(!validation.ok)throw Error(validation.problems.slice(0,4).join(' '));
+   cal=p;$('calRemeasured').checked=false;fillCal();updateCalStatus();$('calToneStatus').textContent='Đã nhập hồ sơ vào phiên hiện tại. Môi trường hiệu chuẩn gốc được giữ nguyên. Bấm Lưu hồ sơ để lưu lâu dài.';
+ }catch(err){$('calToneStatus').textContent='Không nhập được: '+err.message;}
+};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopCalTone();});window.addEventListener('pagehide',stopCalTone);
+buildCalTable();loadCal();fillCal();updateCalStatus();
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pausePlayback();});window.addEventListener('pagehide',()=>{stopSound();if(session)save();});window.addEventListener('beforeunload',e=>{if(session){e.preventDefault();e.returnValue='';}});
+</script></body></html>
