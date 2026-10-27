@@ -45,7 +45,7 @@ Những điều kiện sau là lựa chọn triển khai thận trọng của d�
 
 Phiên mới lưu `appVersion`, `intake`, thông tin thiết bị/môi trường trong `config`, bản sao hiệu chuẩn, kết quả từng tần số, lượt phản hồi và `interpretation`. Báo cáo dẫn nguồn, phiên bản thuật toán, PTA4 hai tai, tai tốt hơn, phân mức, cờ một bên, lý do chặn và hướng dẫn tiếp theo.
 
-Xem lại và xuất JSON luôn tính lại diễn giải từ dữ liệu gốc; không tin nhãn phân mức đã lưu. Phiên cũ vẫn mở được, nhưng thiếu thông tin mới sẽ hiện lý do chưa đủ điều kiện. Không tự thêm xác nhận sức khỏe/môi trường vào phiên cũ. Không thay khóa lịch sử `hearing-lab-sessions-v1`.
+Xem lại và xuất JSON luôn tính lại diễn giải từ dữ liệu gốc; không tin nhãn phân mức đã lưu. Phiên cũ đúng cấu trúc vẫn mở được, nhưng thiếu thông tin mới sẽ hiện lý do chưa đủ điều kiện. Phiên sai cấu trúc được giữ trong dữ liệu gốc và khóa ghi lịch sử để tránh mất dữ liệu; không đưa vào báo cáo. Không tự thêm xác nhận sức khỏe/môi trường vào phiên cũ. Không thay khóa lịch sử `hearing-lab-sessions-v1`.
 
 Dữ liệu nằm trong localStorage của trình duyệt. File JSON chứa cả câu trả lời sức khỏe và ghi chú thiết bị; người dùng chủ động chọn chia sẻ. Có thể xóa từng phiên trong lịch sử.
 

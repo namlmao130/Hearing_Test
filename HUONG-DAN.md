@@ -12,9 +12,10 @@ Mở `Demo.html` rồi chọn **Bắt đầu tự kiểm tra**, hoặc mở tr�
 
 Chi tiết quy tắc, nguồn chính thức và những phần cần kiểm định tiếp: [WHO-REFERENCE.md](WHO-REFERENCE.md). Đây là nâng cấp theo tài liệu WHO, **chưa phải sản phẩm được WHO chứng nhận hoặc đã xác thực độ chính xác lâm sàng**.
 
-## Bản 3.0 — Bayesian/Active Learning nghiên cứu
+## Bản 3.1 — độ tin cậy Bayesian và lưu trữ
 
-- Bài âm đơn mặc định dùng `bayesian-threshold-v2`: posterior ngưỡng độc lập cho từng tai/tần số và chọn mức phát theo expected information gain. Có thể chọn lại phương pháp tăng 5/giảm 10 dB để đối chiếu.
+- Bài âm đơn mặc định dùng `bayesian-threshold-v3`: posterior ngưỡng độc lập cho từng tai/tần số và chọn mức phát theo expected information gain. Có thể chọn lại phương pháp tăng 5/giảm 10 dB để đối chiếu.
+- Bộ lọc v3 yêu cầu bằng chứng so với cả phản hồi ngẫu nhiên 50/50 và phản hồi có thiên lệch; bổ sung probe kiểm tra phản hồi theo mức âm. Điều này thường tăng số lượt và tỷ lệ chưa kết luận được.
 - Mỗi estimate có khoảng hậu nghiệm 95%, lý do dừng và dữ liệu audit. Điểm không đủ bằng chứng sau 48 lượt được ghi `inconclusive`; ngưỡng ngoài dải không bị ép thành số đo.
 - Scheduler kiểm tra mức phát theo dải hiệu chuẩn trước mỗi âm. Phản hồi được gắn với snapshot của âm đã phát; callback cũ sau khi dừng không được cập nhật lượt mới.
 - Bayesian là chế độ nghiên cứu và bị chặn khỏi phân mức WHO trong core, kể cả khi xem lịch sử hoặc xuất JSON. Khoảng hậu nghiệm chỉ có điều kiện trên mô hình, không bao gồm sai số hiệu chuẩn/nhiễu nền.
@@ -25,17 +26,17 @@ Chi tiết quy tắc, nguồn chính thức và những phần cần kiểm đ�
 - Giữ giao diện mô phỏng, biểu đồ tần số theo thang log, các mức và phần che chữ.
 - File giọng nói do người dùng chọn đi qua bộ lọc 6 dải; kéo biểu đồ cập nhật bộ lọc và mức che chữ. Đây là mô phỏng gần đúng bằng EQ, không phải mô hình thính học được kiểm định.
 - Text minh họa trong demo không tự đồng bộ transcript của file âm thanh được chọn.
-- Trợ lý dùng mẫu giải thích; không có GraphRAG, LLM hay Bayesian đã triển khai.
+- Trợ lý trong `Demo.html` dùng mẫu giải thích; không có GraphRAG hoặc LLM. Bayesian nằm trong bài tự đo âm đơn riêng.
 
 ## Âm đơn
 
 1. Dùng tai nghe, chọn nơi yên tĩnh. Tắt chế độ mono, kiểm tra đúng trái/phải, chọn âm lượng nhỏ và giữ nguyên trong phiên.
 2. Chọn một hoặc hai tai. Tám tần số: 250, 500, 1000, 2000, 3000, 4000, 6000, 8000 Hz.
 3. Bấm phát rồi trả lời nghe/không nghe. Có nút dừng để giữ phần đã làm.
-4. Quy trình dùng 10 dB xuống sau khi nghe và 5 dB lên sau khi không nghe. Ngưỡng cần ít nhất hai phản hồi xác nhận trong chuỗi đi lên tại cùng một mức, tối đa 40 lượt/tần số.
+4. Với chế độ đối chiếu staircase, quy trình dùng 10 dB xuống sau khi nghe và 5 dB lên sau khi không nghe. Ngưỡng cần ít nhất hai phản hồi xác nhận trong chuỗi đi lên tại cùng một mức, tối đa 40 lượt/tần số.
 5. Thứ tự: 1000, 2000, 3000, 4000, 6000, 8000, đo lại 1000, rồi 500 và 250 Hz. Nếu hai kết quả 1000 Hz lệch quá 5 dB, phiên bị gắn cờ cần đo lại.
 6. Sau mỗi 5–8 phản hồi, hệ thống chèn ngẫu nhiên một lượt im lặng. Báo “nghe thấy” ở lượt này được tính là dương tính giả và làm giảm độ tin cậy nội bộ.
-7. Hai lần nghe tại sàn -70 dBFS hoặc không nghe tại trần -10 dBFS được ghi là ngoài dải. Không ép chúng thành một ngưỡng chính xác. Không tự tăng vượt trần.
+7. Với staircase chưa hiệu chuẩn, hai lần nghe tại sàn -70 dBFS hoặc không nghe tại trần -10 dBFS được ghi là ngoài dải. Không ép chúng thành một ngưỡng chính xác. Với Bayesian, kết quả ngoài dải cần posterior tail ≥0,90 và ít nhất bốn phản hồi trực tiếp tại biên cùng điều kiện nhất quán. Không tự tăng vượt trần.
 
 Khi chưa có hồ sơ hiệu chuẩn, kết quả dùng dBFS **theo biên độ đỉnh của tone số**, không phải dB HL hay dB SPL tại tai nên không so trực tiếp giữa thiết bị hoặc suy ra mức độ mất thính lực. Muốn xuất dB HL phải cố định toàn bộ thiết bị, mức âm lượng và mẫu tai nghe, rồi đo bằng coupler/ear simulator phù hợp và xây offset riêng cho từng tần số/tai nghe theo RETSPL áp dụng. Việc này cần người có chuyên môn và phải được kiểm tra định kỳ.
 
@@ -75,6 +76,8 @@ Giới hạn cần biết: đây là hiệu chuẩn tại tần số 8 điểm b
 
 ### Kiểm tra phần mềm
 
+Chạy thêm `node verify-bayesian.cjs`, `node verify-reliability.cjs`; bộ mô phỏng mở rộng dùng `node verify-bayesian.cjs --validation`. Thêm `--write` để tái tạo JSON báo cáo. Không lệnh nào phát âm hoặc mở trình duyệt.
+
 Chạy `node verify.cjs` trong thư mục chứa `Demo.html`, `Tu-do-thinh-luc.html` và `hearing-core.js`. Bộ kiểm tra gồm thuật toán ngưỡng, quy đổi đơn vị, giới hạn SPL, dữ liệu nhập hỏng, ngày hiệu chuẩn, phiên thiếu kết quả và việc giữ nguyên môi trường gốc khi lưu hồ sơ nhập. Đây là kiểm thử mã, chưa phải kiểm định bằng thiết bị âm học hoặc người tham gia.
 
 ## Lời nói trong nhiễu
@@ -89,14 +92,15 @@ Chạy `node verify.cjs` trong thư mục chứa `Demo.html`, `Tu-do-thinh-luc.h
 ## Lưu kết quả
 
 - Tự lưu sau mỗi câu trả lời bằng localStorage trong trình duyệt hiện tại.
-- Lịch sử có xem lại biểu đồ/bảng, tải JSON và xóa từng phiên có xác nhận.
+- Lịch sử có xem lại biểu đồ/bảng, tải một phiên/toàn bộ lịch sử JSON, tải dữ liệu gốc và khôi phục từ JSON; xóa từng phiên có xác nhận. Nhập file không tự bắt đầu bài đo và không ghi đè phiên trùng mã nhưng khác nội dung.
 - JSON gồm lượt thử, kết quả, trạng thái hoàn thành/dừng, đơn vị và cấu hình. Không lưu file audio trong lịch sử.
-- Nếu lưu trình duyệt bị chặn hoặc đầy, trang hiện thông báo; tải JSON để giữ bản sao.
+- Nếu lưu bị chặn/đầy, dữ liệu hỏng hoặc tab khác đã đổi lịch sử, trang hiện thông báo và giữ nguyên dữ liệu gốc. Phiên mới có thể chỉ ở bộ nhớ: tải JSON trước khi đóng trang. Lịch sử hỏng được khóa ghi; có thể tải dữ liệu gốc để kiểm tra.
+- JSON được kiểm tra cấu trúc trước khi nhập; giới hạn 10 MB và 1.000 phiên. Không lưu file audio trong lịch sử. Chỉ nên đo trong một tab.
 - Khi tải lại trang, phiên chưa hoàn thành được đánh dấu gián đoạn; chưa có chức năng tiếp tục phiên cũ. Di chuyển file, đổi trình duyệt hoặc xóa dữ liệu trình duyệt có thể ảnh hưởng lịch sử.
 
 ## Bước phát triển tiếp theo
 
-Hiệu chuẩn thiết bị, kiểm soát môi trường đo theo mức nhiễu cho phép, kiểm tra độ tin cậy/phản hồi giả, bộ câu hoặc digit-triplet được thu và xác thực đồng nhất, đối chiếu với máy đo thính lực chuẩn trên đủ số người, sau đó mới bổ sung Bayesian/Active Learning và đánh giá sai số cùng số lượt/thời gian so với baseline.
+Hiệu chuẩn thiết bị, kiểm soát môi trường đo theo mức nhiễu cho phép, kiểm tra độ tin cậy/phản hồi giả, bộ câu hoặc digit-triplet được thu và xác thực đồng nhất, đối chiếu với máy đo thính lực chuẩn trên đủ số người, kiểm định Bayesian/Active Learning hiện có, đánh giá sai số cùng tỷ lệ chưa kết luận được và số lượt/thời gian so với baseline. Các kịch bản ngoài mô hình vẫn cho thấy khoảng bất định có thể quá hẹp.
 
 ## Tài liệu tham chiếu
 

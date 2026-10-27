@@ -59,6 +59,14 @@
   }
   function validBayesianUncertainty(r) {
     const u=r.uncertainty;
+    const fit=r.posterior?.modelFit;
+    // v3 records must contain both model comparisons, not just a saved flag.
+    if (r.engine==='bayesian-threshold-v3' && (!fit ||
+        fit.comparator!=='fair-coin-and-beta-bernoulli-responses' ||
+        !Number.isFinite(fit.biasedCoinLogBayesFactor) ||
+        !Number.isFinite(fit.minimumForEstimate) || fit.minimumForEstimate<Math.log(20)-1e-6 ||
+        fit.logBayesFactor<fit.minimumForEstimate-1e-6 ||
+        fit.biasedCoinLogBayesFactor<fit.minimumForEstimate-1e-6)) return false;
     return !!u && u.conditionalOnModel===true && u.unit==='dBFS_peak' && u.credibleMass===0.95 &&
       [u.lower,u.upper,u.width,r.level].every(Number.isFinite) && u.lower<=r.level && r.level<=u.upper &&
       Math.abs(u.width-(u.upper-u.lower))<0.11 && u.width<=10.00001 &&

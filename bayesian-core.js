@@ -7,20 +7,22 @@
 (function (root) {
   'use strict';
 
-  const VERSION = 'bayesian-threshold-v2';
+  const VERSION = 'bayesian-threshold-v3';
   const DEFAULTS = Object.freeze({
     min: -70, max: -10, initial: -35,
     minTrials: 12, maxTrials: 48, targetWidth: 10, credibleMass: 0.95,
     priorPadding: 30, gridStep: 1, presentationStep: 5, maxUpwardStep: 10,
     boundaryProbability: 0.90, minBoundaryTrials: 4,
-    // Guard against a narrow posterior produced by incoherent responses.
-    // A final estimate may not be over 10x less likely than fair coin flips.
-    minModelLogBayesFactor: -Math.log(10)
+    // Require evidence for level-dependent hearing against BOTH a fair coin
+    // and a Beta(1,1) mixture of constant response probabilities. These are
+    // model comparisons, not a probability that a listener is reliable.
+    minModelLogBayesFactor: Math.log(20),
+    probeEvery: 4, probeDistance: 15
   });
-  const SLOPES = Object.freeze([1.5, 3, 6]);
-  const SLOPE_PRIOR = Object.freeze([0.25, 0.50, 0.25]);
-  const ERROR_RATES = Object.freeze([0.01, 0.05, 0.15]);
-  const ERROR_PRIOR = Object.freeze([0.55, 0.35, 0.10]);
+  const SLOPES = Object.freeze([1.5, 3, 6, 10]);
+  const SLOPE_PRIOR = Object.freeze([0.15, 0.35, 0.30, 0.20]);
+  const ERROR_RATES = Object.freeze([0.01, 0.05, 0.15, 0.30]);
+  const ERROR_PRIOR = Object.freeze([0.35, 0.35, 0.20, 0.10]);
   const NUISANCES = [];
   for (let i = 0; i < SLOPES.length; i++) {
     for (let j = 0; j < ERROR_RATES.length; j++) {
@@ -69,8 +71,8 @@
     if (o.targetWidth < 2 || o.targetWidth > 10) throw new RangeError('Target interval width must be between 2 and 10 dB.');
     if (o.credibleMass < 0.95 || o.credibleMass > 0.999) throw new RangeError('Credible mass must be between 0.95 and 0.999.');
     if (o.priorPadding < 20 || o.priorPadding > 60) throw new RangeError('Prior padding must be between 20 and 60 dB.');
-    if (o.minModelLogBayesFactor < -10 || o.minModelLogBayesFactor > 10) {
-      throw new RangeError('Minimum model log Bayes factor must be between -10 and 10.');
+    if (o.minModelLogBayesFactor < DEFAULTS.minModelLogBayesFactor || o.minModelLogBayesFactor > 10) {
+      throw new RangeError('Minimum model log Bayes factor cannot weaken the default evidence requirement and must be <= 10.');
     }
     return Object.freeze(o);
   }
@@ -145,6 +147,19 @@
 
   function chooseLevel(data) {
     const marginal = thresholdMarginal(data);
+    // Sampling only close to the estimated threshold cannot distinguish hearing
+    // from random responses. Periodic probes deliberately sample both sides.
+    // They obey the same hard output cap and upward step limit as active trials.
+    if (data.trials % data.options.probeEvery === 0) {
+      const direction = (data.trials / data.options.probeEvery) % 2 === 1 ? -1 : 1;
+      const target = quantile(data, marginal, 0.5) + direction * data.options.probeDistance;
+      const safe = data.candidates.filter(level => level <= data.level + data.options.maxUpwardStep + EPS);
+      const level = safe.reduce((best, candidate) => Math.abs(candidate - target) < Math.abs(best - target) - EPS ? candidate : best);
+      data.level = level;
+      data.selection = Object.freeze({ method: 'response-consistency-probe', direction,
+        expectedInformationBits: rounded(expectedInformation(data, level, marginal), 8) });
+      return;
+    }
     let level = data.level, bestInformation = -1;
     for (const candidate of data.candidates) {
       if (candidate > data.level + data.options.maxUpwardStep + EPS) continue;
@@ -175,7 +190,7 @@
     }
     const data = { options: o, thresholds, joint, candidates: candidateLevels(o),
       likelihoods: new Map(), level: o.initial, trials: 0, done: false,
-      observations: [], logEvidence: 0, outcome: null, selection: null };
+      observations: [], logEvidence: 0, nullLogEvidence: 0, heardCount: 0, outcome: null, selection: null };
     data.selection = Object.freeze({ method: 'fixed-initial',
       expectedInformationBits: rounded(expectedInformation(data, data.level, thresholdMarginal(data)), 8) });
     const state = {};
@@ -250,10 +265,13 @@
         boundary: { floor: boundaryStats(floor), ceiling: boundaryStats(ceiling) },
         logEvidence: rounded(data.logEvidence, 6),
         modelFit: {
-          comparator: 'independent-fair-coin-responses',
+          comparator: 'fair-coin-and-beta-bernoulli-responses',
           logBayesFactor: rounded(data.logEvidence + data.trials * Math.log(2), 6),
+          biasedCoinLogBayesFactor: rounded(data.logEvidence - data.nullLogEvidence, 6),
+          biasedCoinPrior: { alpha: 1, beta: 1 },
           minimumForEstimate: rounded(data.options.minModelLogBayesFactor, 6),
-          sufficient: data.logEvidence + data.trials * Math.log(2) >= data.options.minModelLogBayesFactor
+          sufficient: data.logEvidence + data.trials * Math.log(2) >= data.options.minModelLogBayesFactor &&
+            data.logEvidence - data.nullLogEvidence >= data.options.minModelLogBayesFactor
         },
         conditionalOnModel: true
       }
@@ -287,6 +305,11 @@
     if (!Number.isFinite(evidence) || evidence <= 0) throw new Error('Bayesian probability normalization failed.');
     for (let i = 0; i < data.joint.length; i++) data.joint[i] /= evidence;
     data.logEvidence += Math.log(evidence);
+    // Sequential Beta-Bernoulli predictive evidence is valid for the observed
+    // response order; no binomial coefficient belongs in this likelihood.
+    const nullYes = (data.heardCount + 1) / (data.trials + 2);
+    data.nullLogEvidence += Math.log(heard ? nullYes : 1 - nullYes);
+    if (heard) data.heardCount++;
     data.observations.push({ level: data.level, heard });
     data.trials++;
     const info = snapshot(data), p = info.posterior, o = data.options;
@@ -308,7 +331,8 @@
         return finish(data, 'estimate', info.level, 'credible-interval-and-response-bracket', info);
       }
     }
-    if (data.trials >= o.maxTrials) return finish(data, 'inconclusive', null, 'maximum-trials-without-required-evidence', info);
+    if (data.trials >= o.maxTrials) return finish(data, 'inconclusive', null,
+      p.modelFit.sufficient ? 'maximum-trials-without-required-evidence' : 'insufficient-level-dependent-evidence', info);
     chooseLevel(data);
     return null;
   }

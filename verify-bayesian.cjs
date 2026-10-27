@@ -62,7 +62,11 @@ function run(engine, answer, options = DEFAULT_PLAN) {
         assert.ok(outcome.uncertainty.lower <= outcome.uncertainty.upper);
         assert.ok(Math.abs(outcome.uncertainty.width - (outcome.uncertainty.upper - outcome.uncertainty.lower)) < 0.11);
         assert.equal(typeof outcome.posterior.modelFit.logBayesFactor, 'number');
-        if (outcome.kind === 'estimate') assert.equal(outcome.posterior.modelFit.sufficient, true);
+        if (outcome.kind === 'estimate') {
+          assert.equal(outcome.posterior.modelFit.sufficient, true);
+          assert.equal(C.validBayesianUncertainty(outcome), true);
+          assert.ok(outcome.posterior.modelFit.biasedCoinLogBayesFactor >= Math.log(20) - 1e-6);
+        }
       }
       return { outcome, trace, state };
     }
@@ -85,7 +89,7 @@ function validate() {
     { initial: NaN }, { minTrials: 0 }, { maxTrials: 1 },
     { minTrials: 18, maxTrials: 12 }, { minTrials: 12.5 },
     { credibleMass: 1 }, { credibleMass: 0.5 }, { targetWidth: -1 },
-    { minModelLogBayesFactor: -11 }, { minModelLogBayesFactor: 11 },
+    { minModelLogBayesFactor: -11 }, { minModelLogBayesFactor: 0 }, { minModelLogBayesFactor: 11 },
     { min: -70, max: -10, initial: 0 }, { unsupportedOption: true }]) {
     assert.throws(() => B.create(options), `reject malformed options: ${JSON.stringify(options)}`);
   }
@@ -198,7 +202,8 @@ function validate() {
   assert.equal(bridge.session.trials[0].engine, B.VERSION);
   assert.equal(C.validBayesianUncertainty({engine:B.VERSION,kind:'estimate',level:-35,
     uncertainty:{credibleMass:.95,lower:-40,upper:-30,width:10,unit:'dBFS_peak',conditionalOnModel:true},
-    posterior:{modelFit:{sufficient:true,logBayesFactor:0}}}),true);
+    posterior:{modelFit:{sufficient:true,comparator:'fair-coin-and-beta-bernoulli-responses',
+      minimumForEstimate:Math.log(20),logBayesFactor:4,biasedCoinLogBayesFactor:4}}}),true);
   assert.equal(C.validBayesianUncertainty({engine:B.VERSION,kind:'estimate',level:-35,
     uncertainty:{credibleMass:.95,lower:-40,upper:-30,width:10,unit:'dBFS_peak',conditionalOnModel:true}}),false);
   bridge.waiting = true;bridge.pendingPresentation = { ...bridge.session.trials[0], pointIndex: 0,
@@ -215,9 +220,21 @@ function validate() {
   assert.ok(scenario('ideal_step').bayesian.estimateErrorsOnly.maeDb < 2.5);
   assert.ok(scenario('matched_logistic').bayesian.estimateErrorsOnly.maeDb < 3);
   assert.ok(scenario('matched_logistic').bayesian.estimatorYield >= 0.9);
-  assert.ok(scenario('matched_logistic').bayesian.posteriorIntervals.coverageAllKnownTruthSessions >= 0.8);
+  assert.ok(scenario('matched_logistic').bayesian.posteriorIntervals.coverageAllKnownTruthSessions >= 0.9);
+  assert.ok(scenario('shallow_slope').bayesian.posteriorIntervals.coverageAllKnownTruthSessions >= 0.85);
   assert.equal(scenario('broad_thresholds').bayesian.outsideAvailableRange.falselyEstimated, 0);
-  assert.ok(scenario('random_responder').bayesian.estimatorYield <= 0.75);
+  assert.ok(scenario('random_responder').bayesian.estimatorYield <= 0.08);
+
+  // The nuisance null is an ordered Bernoulli sequence integrated over p,
+  // Beta(h+1,m+1). Check its exact log evidence independently of the engine.
+  const audit = replayA.outcome, yes = replayA.trace.filter(t => t.heard).length, no = replayA.trace.length - yes;
+  const logFactorial = n => Array.from({length:n}, (_, i) => Math.log(i + 1)).reduce((a,b)=>a+b,0);
+  const nullEvidence = logFactorial(yes) + logFactorial(no) - logFactorial(yes + no + 1);
+  assert.ok(Math.abs(audit.posterior.modelFit.biasedCoinLogBayesFactor - (audit.posterior.logEvidence - nullEvidence)) < 2e-6);
+  assert.equal(inconsistent.outcome.kind, 'inconclusive', 'strict alternation cannot pass the v3 evidence gate');
+  const probeState = B.create(DEFAULT_PLAN), methods = [];
+  while(!probeState.done){methods.push(probeState.selection.method); B.advance(probeState, probeState.level >= -45);}
+  assert.ok(methods.includes('response-consistency-probe'), 'probe policy actually samples response consistency');
 
   return { passed: true, engine: B.VERSION };
 }
@@ -225,15 +242,27 @@ function validate() {
 const SCENARIOS = [
   { id: 'ideal_step', description: 'Deterministic detection; interior uniform thresholds.', kind: 'step', range: [-60, -20] },
   { id: 'matched_logistic', description: 'A supported model component: logistic scale 3 dB; false positive 0.05, lapse 0.05.', scale: 3, falsePositive: 0.05, lapse: 0.05, range: [-60, -20] },
-  { id: 'shallow_slope', description: 'Misspecified shallow responses: scale 7 dB; false positive 0.03, lapse 0.07.', scale: 7, falsePositive: 0.03, lapse: 0.07, range: [-60, -20] },
+  { id: 'shallow_slope', description: 'Off-grid shallow responses: scale 7 dB; false positive 0.03, lapse 0.07.', scale: 7, falsePositive: 0.03, lapse: 0.07, range: [-60, -20] },
   { id: 'steep_slope', description: 'Steep responses: scale 0.9 dB; false positive 0.01, lapse 0.03.', scale: 0.9, falsePositive: 0.01, lapse: 0.03, range: [-60, -20] },
   { id: 'high_lapse', description: 'Misspecified lapse 0.15 with logistic scale 3 dB and false positive 0.02.', scale: 3, falsePositive: 0.02, lapse: 0.15, range: [-60, -20] },
   { id: 'false_positive', description: 'Misspecified false positive 0.15 with logistic scale 3 dB and lapse 0.03.', scale: 3, falsePositive: 0.15, lapse: 0.03, range: [-60, -20] },
   { id: 'broad_thresholds', description: 'Uniform thresholds include 12 dB outside each available boundary.', scale: 3, falsePositive: 0.02, lapse: 0.02, range: [-82, 2] },
   { id: 'always_heard', description: 'Behavior stress test; no identifiable generating threshold.', kind: 'constant', probability: 1 },
   { id: 'never_heard', description: 'Behavior stress test; no identifiable generating threshold.', kind: 'constant', probability: 0 },
-  { id: 'random_responder', description: 'Independent 50/50 responses; no identifiable generating threshold.', kind: 'constant', probability: 0.5 }
+  { id: 'random_responder', description: 'Independent 50/50 responses; no identifiable generating threshold.', kind: 'constant', probability: 0.5 },
+  { id: 'biased_yes', description: 'Independent responses with p(heard)=0.8; no threshold.', kind: 'constant', probability: 0.8 },
+  { id: 'biased_no', description: 'Independent responses with p(heard)=0.2; no threshold.', kind: 'constant', probability: 0.2 },
+  { id: 'very_shallow', description: 'Outside the slope grid: scale 14 dB, false positive 0.05, lapse 0.10.', scale: 14, falsePositive: 0.05, lapse: 0.10, range: [-60,-20] },
+  { id: 'threshold_drift', description: 'Threshold increases by 12 dB after response 16; no single stationary ground truth.', kind:'drift', scale:3, falsePositive:0.05, lapse:0.05, range:[-60,-32] }
 ];
+
+function wilson(successes, count) {
+  if (!count) return null;
+  const z=1.959964, p=successes/count, denominator=1+z*z/count;
+  const center=(p+z*z/(2*count))/denominator;
+  const half=z*Math.sqrt(p*(1-p)/count+z*z/(4*count*count))/denominator;
+  return { lower:round(Math.max(0,center-half)), upper:round(Math.min(1,center+half)), method:'Wilson-95-percent' };
+}
 
 function aggregate(runs) {
   const counts = { estimate: 0, below_range: 0, above_range: 0, inconclusive: 0 };
@@ -266,25 +295,29 @@ function aggregate(runs) {
     sessions: runs.length,
     outcomes: counts,
     estimatorYield: round(counts.estimate / runs.length),
+    estimatorYieldInterval95: wilson(counts.estimate, runs.length),
     estimateErrorsOnly: { count: errors.length, biasDb: round(mean(errors)),
       maeDb: round(mean(errors.map(Math.abs))), rmseDb: round(errors.length ? Math.sqrt(mean(errors.map(e => e * e))) : null) },
     responsesAllSessions: { mean: round(mean(responses)), min: Math.min(...responses), max: Math.max(...responses) },
     posteriorIntervals: { knownTruthSessions: runs.filter(r => r.threshold !== null).length,
       availableWithKnownTruth: availableIntervals,
       coverageAllKnownTruthSessions: round(mean(coverageAll)),
+      coverageInterval95: wilson(coverageAll.reduce((a,b)=>a+b,0), coverageAll.length),
       coverageEstimateSessions: round(mean(coverageResolved)),
       meanWidthEstimateSessionsDb: round(mean(intervalWidths)), conditionalOnModel: true },
     outsideAvailableRange: outsideKinds
   };
 }
 
-function benchmark(repetitions = 48) {
+function benchmark(repetitions = 48, seeds = [SEED]) {
   assert.ok(Number.isInteger(repetitions) && repetitions >= 1 && repetitions <= 10000);
+  assert.ok(Array.isArray(seeds) && seeds.length > 0 && seeds.every(Number.isInteger));
   const report = {
     schemaVersion: 1,
     engine: B.VERSION,
-    seed: SEED,
-    repetitionsPerScenario: repetitions,
+    seeds,
+    repetitionsPerSeed: repetitions,
+    repetitionsPerScenario: repetitions * seeds.length,
     plan: DEFAULT_PLAN,
     settings: B.DEFAULTS,
     interpretation: [
@@ -299,17 +332,18 @@ function benchmark(repetitions = 48) {
   };
   SCENARIOS.forEach((scenario, scenarioIndex) => {
     const runs = { bayesian: [], staircase: [] };
-    for (let i = 0; i < repetitions; i++) {
-      const seed = (SEED + Math.imul(scenarioIndex + 1, 0x9e3779b1) + Math.imul(i + 1, 0x85ebca6b)) >>> 0;
+    for (const baseSeed of seeds) for (let i = 0; i < repetitions; i++) {
+      const seed = (baseSeed + Math.imul(scenarioIndex + 1, 0x9e3779b1) + Math.imul(i + 1, 0x85ebca6b)) >>> 0;
       const threshold = scenario.range ? scenario.range[0] + random(seed)() * (scenario.range[1] - scenario.range[0]) : null;
       for (const engine of ['bayesian', 'staircase']) {
         const rng = random(seed ^ 0xa5a5a5a5);
-        const result = run(engine, level => {
+        const result = run(engine, (level, trial) => {
           if (scenario.kind === 'step') return level >= threshold;
-          const p = scenario.kind === 'constant' ? scenario.probability : logistic(level, threshold, scenario.scale, scenario.falsePositive, scenario.lapse);
+          const activeThreshold = scenario.kind==='drift' && trial >= 16 ? threshold + 12 : threshold;
+          const p = scenario.kind === 'constant' ? scenario.probability : logistic(level, activeThreshold, scenario.scale, scenario.falsePositive, scenario.lapse);
           return rng() < p;
         });
-        runs[engine].push({ threshold, result });
+        runs[engine].push({ threshold:scenario.kind==='drift'?null:threshold, result });
       }
     }
     report.scenarios.push({ ...scenario, bayesian: aggregate(runs.bayesian), staircase: aggregate(runs.staircase) });
@@ -319,11 +353,21 @@ function benchmark(repetitions = 48) {
 
 if (require.main === module) {
   const args = process.argv.slice(2);
-  for (const arg of args) assert.ok(['--benchmark', '--write'].includes(arg), `unknown option ${arg}`);
+  for (const arg of args) assert.ok(['--benchmark', '--write', '--validation'].includes(arg), `unknown option ${arg}`);
   const validation = validate();
-  if (args.includes('--benchmark') || args.includes('--write')) {
-    const report = benchmark();
-    if (args.includes('--write')) fs.writeFileSync(path.join(__dirname, 'bayesian-benchmark.json'), JSON.stringify(report, null, 2) + '\n');
+  if (args.includes('--benchmark') || args.includes('--write') || args.includes('--validation')) {
+    const extended = args.includes('--validation');
+    // Seeds fixed before inspecting extended-run results. This is a numerical
+    // holdout, not a substitute for a preregistered human validation cohort.
+    const report = extended ? benchmark(64, [0x1729abcd, 0x83e61b05, 0xf108d372]) : benchmark();
+    if (extended) {
+      const find=id=>report.scenarios.find(s=>s.id===id).bayesian;
+      for(const id of ['random_responder','biased_yes','biased_no']) assert.ok(find(id).estimatorYield<=0.08, id+' false-estimate regression');
+      assert.ok(find('matched_logistic').estimatorYield>=0.75, 'matched model must remain useful');
+      assert.ok(find('matched_logistic').posteriorIntervals.coverageAllKnownTruthSessions>=0.9);
+      assert.ok(find('shallow_slope').posteriorIntervals.coverageAllKnownTruthSessions>=0.85);
+    }
+    if (args.includes('--write')) fs.writeFileSync(path.join(__dirname, extended?'bayesian-validation.json':'bayesian-benchmark.json'), JSON.stringify(report, null, 2) + '\n');
     process.stdout.write(JSON.stringify({ validation, ...report }, null, 2) + '\n');
   } else {
     console.log(`PASS: Bayesian invariants, boundaries, calibration windows, replay and response-quality checks (${validation.engine}).`);

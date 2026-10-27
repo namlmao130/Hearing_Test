@@ -1,7 +1,10 @@
 {
   "schemaVersion": 1,
-  "engine": "bayesian-threshold-v2",
-  "seed": 1749138473,
+  "engine": "bayesian-threshold-v3",
+  "seeds": [
+    1749138473
+  ],
+  "repetitionsPerSeed": 48,
   "repetitionsPerScenario": 48,
   "plan": {
     "min": -70,
@@ -22,7 +25,9 @@
     "maxUpwardStep": 10,
     "boundaryProbability": 0.9,
     "minBoundaryTrials": 4,
-    "minModelLogBayesFactor": -2.302585092994046
+    "minModelLogBayesFactor": 2.995732273553991,
+    "probeEvery": 4,
+    "probeDistance": 15
   },
   "interpretation": [
     "Synthetic numerical benchmark, not human validation or evidence of clinical accuracy.",
@@ -50,23 +55,33 @@
           "inconclusive": 0
         },
         "estimatorYield": 1,
+        "estimatorYieldInterval95": {
+          "lower": 0.9259,
+          "upper": 1,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 48,
-          "biasDb": 0.266,
-          "maeDb": 1.3276,
-          "rmseDb": 1.4787
+          "biasDb": 0.516,
+          "maeDb": 1.4492,
+          "rmseDb": 1.6005
         },
         "responsesAllSessions": {
-          "mean": 12,
-          "min": 12,
-          "max": 12
+          "mean": 15.2083,
+          "min": 15,
+          "max": 16
         },
         "posteriorIntervals": {
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 48,
           "coverageAllKnownTruthSessions": 1,
+          "coverageInterval95": {
+            "lower": 0.9259,
+            "upper": 1,
+            "method": "Wilson-95-percent"
+          },
           "coverageEstimateSessions": 1,
-          "meanWidthEstimateSessionsDb": 8,
+          "meanWidthEstimateSessionsDb": 9.4583,
           "conditionalOnModel": true
         },
         "outsideAvailableRange": {
@@ -84,6 +99,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 1,
+        "estimatorYieldInterval95": {
+          "lower": 0.9259,
+          "upper": 1,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 48,
           "biasDb": 2.8285,
@@ -99,6 +119,7 @@
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -123,29 +144,39 @@
       "bayesian": {
         "sessions": 48,
         "outcomes": {
-          "estimate": 47,
+          "estimate": 45,
           "below_range": 0,
           "above_range": 0,
-          "inconclusive": 1
+          "inconclusive": 3
         },
-        "estimatorYield": 0.9792,
+        "estimatorYield": 0.9375,
+        "estimatorYieldInterval95": {
+          "lower": 0.8316,
+          "upper": 0.9785,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
-          "count": 47,
-          "biasDb": -0.3577,
-          "maeDb": 1.7843,
-          "rmseDb": 2.2961
+          "count": 45,
+          "biasDb": -0.6386,
+          "maeDb": 1.4725,
+          "rmseDb": 1.8202
         },
         "responsesAllSessions": {
-          "mean": 17.3333,
-          "min": 12,
+          "mean": 27.1042,
+          "min": 17,
           "max": 48
         },
         "posteriorIntervals": {
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 48,
-          "coverageAllKnownTruthSessions": 0.9583,
-          "coverageEstimateSessions": 0.9574,
-          "meanWidthEstimateSessionsDb": 9.8298,
+          "coverageAllKnownTruthSessions": 1,
+          "coverageInterval95": {
+            "lower": 0.9259,
+            "upper": 1,
+            "method": "Wilson-95-percent"
+          },
+          "coverageEstimateSessions": 1,
+          "meanWidthEstimateSessionsDb": 9.8667,
           "conditionalOnModel": true
         },
         "outsideAvailableRange": {
@@ -163,6 +194,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 1,
+        "estimatorYieldInterval95": {
+          "lower": 0.9259,
+          "upper": 1,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 48,
           "biasDb": 3.2153,
@@ -178,6 +214,7 @@
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -191,7 +228,7 @@
     },
     {
       "id": "shallow_slope",
-      "description": "Misspecified shallow responses: scale 7 dB; false positive 0.03, lapse 0.07.",
+      "description": "Off-grid shallow responses: scale 7 dB; false positive 0.03, lapse 0.07.",
       "scale": 7,
       "falsePositive": 0.03,
       "lapse": 0.07,
@@ -202,29 +239,39 @@
       "bayesian": {
         "sessions": 48,
         "outcomes": {
-          "estimate": 46,
+          "estimate": 20,
           "below_range": 0,
           "above_range": 0,
-          "inconclusive": 2
+          "inconclusive": 28
         },
-        "estimatorYield": 0.9583,
+        "estimatorYield": 0.4167,
+        "estimatorYieldInterval95": {
+          "lower": 0.2885,
+          "upper": 0.5572,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
-          "count": 46,
-          "biasDb": 0.4489,
-          "maeDb": 3.3883,
-          "rmseDb": 4.1027
+          "count": 20,
+          "biasDb": -0.0989,
+          "maeDb": 2.7906,
+          "rmseDb": 3.8084
         },
         "responsesAllSessions": {
-          "mean": 23.4375,
-          "min": 12,
+          "mean": 41.8542,
+          "min": 17,
           "max": 48
         },
         "posteriorIntervals": {
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 48,
-          "coverageAllKnownTruthSessions": 0.75,
-          "coverageEstimateSessions": 0.7391,
-          "meanWidthEstimateSessionsDb": 9.8478,
+          "coverageAllKnownTruthSessions": 0.8958,
+          "coverageInterval95": {
+            "lower": 0.7783,
+            "upper": 0.9547,
+            "method": "Wilson-95-percent"
+          },
+          "coverageEstimateSessions": 0.75,
+          "meanWidthEstimateSessionsDb": 9.75,
           "conditionalOnModel": true
         },
         "outsideAvailableRange": {
@@ -242,6 +289,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 1,
+        "estimatorYieldInterval95": {
+          "lower": 0.9259,
+          "upper": 1,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 48,
           "biasDb": 0.4295,
@@ -257,6 +309,7 @@
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -287,23 +340,33 @@
           "inconclusive": 0
         },
         "estimatorYield": 1,
+        "estimatorYieldInterval95": {
+          "lower": 0.9259,
+          "upper": 1,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 48,
-          "biasDb": 0.0106,
-          "maeDb": 1.1289,
-          "rmseDb": 1.3518
+          "biasDb": 0.0939,
+          "maeDb": 1.0307,
+          "rmseDb": 1.3099
         },
         "responsesAllSessions": {
-          "mean": 13.2708,
-          "min": 12,
-          "max": 24
+          "mean": 19.0208,
+          "min": 15,
+          "max": 37
         },
         "posteriorIntervals": {
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 48,
           "coverageAllKnownTruthSessions": 1,
+          "coverageInterval95": {
+            "lower": 0.9259,
+            "upper": 1,
+            "method": "Wilson-95-percent"
+          },
           "coverageEstimateSessions": 1,
-          "meanWidthEstimateSessionsDb": 9.1667,
+          "meanWidthEstimateSessionsDb": 9.7292,
           "conditionalOnModel": true
         },
         "outsideAvailableRange": {
@@ -321,6 +384,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 1,
+        "estimatorYieldInterval95": {
+          "lower": 0.9259,
+          "upper": 1,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 48,
           "biasDb": 2.0314,
@@ -336,6 +404,7 @@
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -360,29 +429,39 @@
       "bayesian": {
         "sessions": 48,
         "outcomes": {
-          "estimate": 47,
+          "estimate": 40,
           "below_range": 0,
           "above_range": 0,
-          "inconclusive": 1
+          "inconclusive": 8
         },
-        "estimatorYield": 0.9792,
+        "estimatorYield": 0.8333,
+        "estimatorYieldInterval95": {
+          "lower": 0.7042,
+          "upper": 0.913,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
-          "count": 47,
-          "biasDb": 0.4442,
-          "maeDb": 2.1792,
-          "rmseDb": 2.5953
+          "count": 40,
+          "biasDb": 0.1527,
+          "maeDb": 1.566,
+          "rmseDb": 1.8774
         },
         "responsesAllSessions": {
-          "mean": 18.2292,
-          "min": 12,
+          "mean": 33.8542,
+          "min": 15,
           "max": 48
         },
         "posteriorIntervals": {
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 48,
-          "coverageAllKnownTruthSessions": 0.8958,
-          "coverageEstimateSessions": 0.8936,
-          "meanWidthEstimateSessionsDb": 9.8085,
+          "coverageAllKnownTruthSessions": 1,
+          "coverageInterval95": {
+            "lower": 0.9259,
+            "upper": 1,
+            "method": "Wilson-95-percent"
+          },
+          "coverageEstimateSessions": 1,
+          "meanWidthEstimateSessionsDb": 9.825,
           "conditionalOnModel": true
         },
         "outsideAvailableRange": {
@@ -400,6 +479,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 1,
+        "estimatorYieldInterval95": {
+          "lower": 0.9259,
+          "upper": 1,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 48,
           "biasDb": 2.9184,
@@ -415,6 +499,7 @@
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -439,29 +524,39 @@
       "bayesian": {
         "sessions": 48,
         "outcomes": {
-          "estimate": 47,
+          "estimate": 36,
           "below_range": 0,
           "above_range": 0,
-          "inconclusive": 1
+          "inconclusive": 12
         },
-        "estimatorYield": 0.9792,
+        "estimatorYield": 0.75,
+        "estimatorYieldInterval95": {
+          "lower": 0.6122,
+          "upper": 0.8508,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
-          "count": 47,
-          "biasDb": 0.0765,
-          "maeDb": 2.1109,
-          "rmseDb": 2.8909
+          "count": 36,
+          "biasDb": -0.4867,
+          "maeDb": 1.8746,
+          "rmseDb": 2.278
         },
         "responsesAllSessions": {
-          "mean": 18.8542,
-          "min": 12,
+          "mean": 33.9583,
+          "min": 17,
           "max": 48
         },
         "posteriorIntervals": {
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 48,
-          "coverageAllKnownTruthSessions": 0.9375,
-          "coverageEstimateSessions": 0.9362,
-          "meanWidthEstimateSessionsDb": 9.8723,
+          "coverageAllKnownTruthSessions": 1,
+          "coverageInterval95": {
+            "lower": 0.9259,
+            "upper": 1,
+            "method": "Wilson-95-percent"
+          },
+          "coverageEstimateSessions": 1,
+          "meanWidthEstimateSessionsDb": 9.7222,
           "conditionalOnModel": true
         },
         "outsideAvailableRange": {
@@ -479,6 +574,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 1,
+        "estimatorYieldInterval95": {
+          "lower": 0.9259,
+          "upper": 1,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 48,
           "biasDb": 1.5524,
@@ -494,6 +594,7 @@
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -518,29 +619,39 @@
       "bayesian": {
         "sessions": 48,
         "outcomes": {
-          "estimate": 26,
+          "estimate": 24,
           "below_range": 4,
           "above_range": 12,
-          "inconclusive": 6
+          "inconclusive": 8
         },
-        "estimatorYield": 0.5417,
+        "estimatorYield": 0.5,
+        "estimatorYieldInterval95": {
+          "lower": 0.3639,
+          "upper": 0.6361,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
-          "count": 26,
-          "biasDb": -0.0693,
-          "maeDb": 1.5673,
-          "rmseDb": 1.8368
+          "count": 24,
+          "biasDb": 0.325,
+          "maeDb": 1.7664,
+          "rmseDb": 2.1855
         },
         "responsesAllSessions": {
-          "mean": 19.6875,
+          "mean": 24.3125,
           "min": 12,
           "max": 48
         },
         "posteriorIntervals": {
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 48,
-          "coverageAllKnownTruthSessions": 1,
+          "coverageAllKnownTruthSessions": 0.9792,
+          "coverageInterval95": {
+            "lower": 0.891,
+            "upper": 0.9963,
+            "method": "Wilson-95-percent"
+          },
           "coverageEstimateSessions": 1,
-          "meanWidthEstimateSessionsDb": 9.6538,
+          "meanWidthEstimateSessionsDb": 9.6667,
           "conditionalOnModel": true
         },
         "outsideAvailableRange": {
@@ -558,6 +669,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 0.5833,
+        "estimatorYieldInterval95": {
+          "lower": 0.4428,
+          "upper": 0.7115,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 28,
           "biasDb": 1.7363,
@@ -573,6 +689,7 @@
           "knownTruthSessions": 48,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -598,6 +715,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 0,
+        "estimatorYieldInterval95": {
+          "lower": 0,
+          "upper": 0.0741,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 0,
           "biasDb": null,
@@ -613,6 +735,7 @@
           "knownTruthSessions": 0,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -632,6 +755,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 0,
+        "estimatorYieldInterval95": {
+          "lower": 0,
+          "upper": 0.0741,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 0,
           "biasDb": null,
@@ -647,6 +775,7 @@
           "knownTruthSessions": 0,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -672,6 +801,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 0,
+        "estimatorYieldInterval95": {
+          "lower": 0,
+          "upper": 0.0741,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 0,
           "biasDb": null,
@@ -687,6 +821,7 @@
           "knownTruthSessions": 0,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -706,6 +841,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 0,
+        "estimatorYieldInterval95": {
+          "lower": 0,
+          "upper": 0.0741,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 0,
           "biasDb": null,
@@ -721,6 +861,7 @@
           "knownTruthSessions": 0,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -740,12 +881,17 @@
       "bayesian": {
         "sessions": 48,
         "outcomes": {
-          "estimate": 23,
+          "estimate": 1,
           "below_range": 1,
-          "above_range": 5,
-          "inconclusive": 19
+          "above_range": 4,
+          "inconclusive": 42
         },
-        "estimatorYield": 0.4792,
+        "estimatorYield": 0.0208,
+        "estimatorYieldInterval95": {
+          "lower": 0.0037,
+          "upper": 0.109,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 0,
           "biasDb": null,
@@ -753,7 +899,7 @@
           "rmseDb": null
         },
         "responsesAllSessions": {
-          "mean": 31.8125,
+          "mean": 44.3125,
           "min": 12,
           "max": 48
         },
@@ -761,6 +907,7 @@
           "knownTruthSessions": 0,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
@@ -780,6 +927,11 @@
           "inconclusive": 0
         },
         "estimatorYield": 0.5833,
+        "estimatorYieldInterval95": {
+          "lower": 0.4428,
+          "upper": 0.7115,
+          "method": "Wilson-95-percent"
+        },
         "estimateErrorsOnly": {
           "count": 0,
           "biasDb": null,
@@ -795,6 +947,366 @@
           "knownTruthSessions": 0,
           "availableWithKnownTruth": 0,
           "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
+          "coverageEstimateSessions": null,
+          "meanWidthEstimateSessionsDb": null,
+          "conditionalOnModel": true
+        },
+        "outsideAvailableRange": {
+          "total": 0,
+          "correctlyCensored": 0,
+          "falselyEstimated": 0
+        }
+      }
+    },
+    {
+      "id": "biased_yes",
+      "description": "Independent responses with p(heard)=0.8; no threshold.",
+      "kind": "constant",
+      "probability": 0.8,
+      "bayesian": {
+        "sessions": 48,
+        "outcomes": {
+          "estimate": 0,
+          "below_range": 43,
+          "above_range": 0,
+          "inconclusive": 5
+        },
+        "estimatorYield": 0,
+        "estimatorYieldInterval95": {
+          "lower": 0,
+          "upper": 0.0741,
+          "method": "Wilson-95-percent"
+        },
+        "estimateErrorsOnly": {
+          "count": 0,
+          "biasDb": null,
+          "maeDb": null,
+          "rmseDb": null
+        },
+        "responsesAllSessions": {
+          "mean": 17.4375,
+          "min": 12,
+          "max": 48
+        },
+        "posteriorIntervals": {
+          "knownTruthSessions": 0,
+          "availableWithKnownTruth": 0,
+          "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
+          "coverageEstimateSessions": null,
+          "meanWidthEstimateSessionsDb": null,
+          "conditionalOnModel": true
+        },
+        "outsideAvailableRange": {
+          "total": 0,
+          "correctlyCensored": 0,
+          "falselyEstimated": 0
+        }
+      },
+      "staircase": {
+        "sessions": 48,
+        "outcomes": {
+          "estimate": 4,
+          "below_range": 44,
+          "above_range": 0,
+          "inconclusive": 0
+        },
+        "estimatorYield": 0.0833,
+        "estimatorYieldInterval95": {
+          "lower": 0.0329,
+          "upper": 0.1955,
+          "method": "Wilson-95-percent"
+        },
+        "estimateErrorsOnly": {
+          "count": 0,
+          "biasDb": null,
+          "maeDb": null,
+          "rmseDb": null
+        },
+        "responsesAllSessions": {
+          "mean": 8.0417,
+          "min": 6,
+          "max": 14
+        },
+        "posteriorIntervals": {
+          "knownTruthSessions": 0,
+          "availableWithKnownTruth": 0,
+          "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
+          "coverageEstimateSessions": null,
+          "meanWidthEstimateSessionsDb": null,
+          "conditionalOnModel": true
+        },
+        "outsideAvailableRange": {
+          "total": 0,
+          "correctlyCensored": 0,
+          "falselyEstimated": 0
+        }
+      }
+    },
+    {
+      "id": "biased_no",
+      "description": "Independent responses with p(heard)=0.2; no threshold.",
+      "kind": "constant",
+      "probability": 0.2,
+      "bayesian": {
+        "sessions": 48,
+        "outcomes": {
+          "estimate": 0,
+          "below_range": 0,
+          "above_range": 38,
+          "inconclusive": 10
+        },
+        "estimatorYield": 0,
+        "estimatorYieldInterval95": {
+          "lower": 0,
+          "upper": 0.0741,
+          "method": "Wilson-95-percent"
+        },
+        "estimateErrorsOnly": {
+          "count": 0,
+          "biasDb": null,
+          "maeDb": null,
+          "rmseDb": null
+        },
+        "responsesAllSessions": {
+          "mean": 23.0208,
+          "min": 12,
+          "max": 48
+        },
+        "posteriorIntervals": {
+          "knownTruthSessions": 0,
+          "availableWithKnownTruth": 0,
+          "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
+          "coverageEstimateSessions": null,
+          "meanWidthEstimateSessionsDb": null,
+          "conditionalOnModel": true
+        },
+        "outsideAvailableRange": {
+          "total": 0,
+          "correctlyCensored": 0,
+          "falselyEstimated": 0
+        }
+      },
+      "staircase": {
+        "sessions": 48,
+        "outcomes": {
+          "estimate": 18,
+          "below_range": 0,
+          "above_range": 30,
+          "inconclusive": 0
+        },
+        "estimatorYield": 0.375,
+        "estimatorYieldInterval95": {
+          "lower": 0.2522,
+          "upper": 0.5164,
+          "method": "Wilson-95-percent"
+        },
+        "estimateErrorsOnly": {
+          "count": 0,
+          "biasDb": null,
+          "maeDb": null,
+          "rmseDb": null
+        },
+        "responsesAllSessions": {
+          "mean": 12.5208,
+          "min": 5,
+          "max": 29
+        },
+        "posteriorIntervals": {
+          "knownTruthSessions": 0,
+          "availableWithKnownTruth": 0,
+          "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
+          "coverageEstimateSessions": null,
+          "meanWidthEstimateSessionsDb": null,
+          "conditionalOnModel": true
+        },
+        "outsideAvailableRange": {
+          "total": 0,
+          "correctlyCensored": 0,
+          "falselyEstimated": 0
+        }
+      }
+    },
+    {
+      "id": "very_shallow",
+      "description": "Outside the slope grid: scale 14 dB, false positive 0.05, lapse 0.10.",
+      "scale": 14,
+      "falsePositive": 0.05,
+      "lapse": 0.1,
+      "range": [
+        -60,
+        -20
+      ],
+      "bayesian": {
+        "sessions": 48,
+        "outcomes": {
+          "estimate": 4,
+          "below_range": 0,
+          "above_range": 0,
+          "inconclusive": 44
+        },
+        "estimatorYield": 0.0833,
+        "estimatorYieldInterval95": {
+          "lower": 0.0329,
+          "upper": 0.1955,
+          "method": "Wilson-95-percent"
+        },
+        "estimateErrorsOnly": {
+          "count": 4,
+          "biasDb": -3.3803,
+          "maeDb": 8.3979,
+          "rmseDb": 9.5263
+        },
+        "responsesAllSessions": {
+          "mean": 46.8125,
+          "min": 24,
+          "max": 48
+        },
+        "posteriorIntervals": {
+          "knownTruthSessions": 48,
+          "availableWithKnownTruth": 48,
+          "coverageAllKnownTruthSessions": 0.8333,
+          "coverageInterval95": {
+            "lower": 0.7042,
+            "upper": 0.913,
+            "method": "Wilson-95-percent"
+          },
+          "coverageEstimateSessions": 0.25,
+          "meanWidthEstimateSessionsDb": 10,
+          "conditionalOnModel": true
+        },
+        "outsideAvailableRange": {
+          "total": 0,
+          "correctlyCensored": 0,
+          "falselyEstimated": 0
+        }
+      },
+      "staircase": {
+        "sessions": 48,
+        "outcomes": {
+          "estimate": 46,
+          "below_range": 2,
+          "above_range": 0,
+          "inconclusive": 0
+        },
+        "estimatorYield": 0.9583,
+        "estimatorYieldInterval95": {
+          "lower": 0.8602,
+          "upper": 0.9885,
+          "method": "Wilson-95-percent"
+        },
+        "estimateErrorsOnly": {
+          "count": 46,
+          "biasDb": -1.0324,
+          "maeDb": 7.6497,
+          "rmseDb": 9.2517
+        },
+        "responsesAllSessions": {
+          "mean": 14.875,
+          "min": 5,
+          "max": 30
+        },
+        "posteriorIntervals": {
+          "knownTruthSessions": 48,
+          "availableWithKnownTruth": 0,
+          "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
+          "coverageEstimateSessions": null,
+          "meanWidthEstimateSessionsDb": null,
+          "conditionalOnModel": true
+        },
+        "outsideAvailableRange": {
+          "total": 0,
+          "correctlyCensored": 0,
+          "falselyEstimated": 0
+        }
+      }
+    },
+    {
+      "id": "threshold_drift",
+      "description": "Threshold increases by 12 dB after response 16; no single stationary ground truth.",
+      "kind": "drift",
+      "scale": 3,
+      "falsePositive": 0.05,
+      "lapse": 0.05,
+      "range": [
+        -60,
+        -32
+      ],
+      "bayesian": {
+        "sessions": 48,
+        "outcomes": {
+          "estimate": 13,
+          "below_range": 0,
+          "above_range": 0,
+          "inconclusive": 35
+        },
+        "estimatorYield": 0.2708,
+        "estimatorYieldInterval95": {
+          "lower": 0.1657,
+          "upper": 0.41,
+          "method": "Wilson-95-percent"
+        },
+        "estimateErrorsOnly": {
+          "count": 0,
+          "biasDb": null,
+          "maeDb": null,
+          "rmseDb": null
+        },
+        "responsesAllSessions": {
+          "mean": 42.8958,
+          "min": 17,
+          "max": 48
+        },
+        "posteriorIntervals": {
+          "knownTruthSessions": 0,
+          "availableWithKnownTruth": 0,
+          "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
+          "coverageEstimateSessions": null,
+          "meanWidthEstimateSessionsDb": null,
+          "conditionalOnModel": true
+        },
+        "outsideAvailableRange": {
+          "total": 0,
+          "correctlyCensored": 0,
+          "falselyEstimated": 0
+        }
+      },
+      "staircase": {
+        "sessions": 48,
+        "outcomes": {
+          "estimate": 48,
+          "below_range": 0,
+          "above_range": 0,
+          "inconclusive": 0
+        },
+        "estimatorYield": 1,
+        "estimatorYieldInterval95": {
+          "lower": 0.9259,
+          "upper": 1,
+          "method": "Wilson-95-percent"
+        },
+        "estimateErrorsOnly": {
+          "count": 0,
+          "biasDb": null,
+          "maeDb": null,
+          "rmseDb": null
+        },
+        "responsesAllSessions": {
+          "mean": 11.0208,
+          "min": 6,
+          "max": 28
+        },
+        "posteriorIntervals": {
+          "knownTruthSessions": 0,
+          "availableWithKnownTruth": 0,
+          "coverageAllKnownTruthSessions": null,
+          "coverageInterval95": null,
           "coverageEstimateSessions": null,
           "meanWidthEstimateSessionsDb": null,
           "conditionalOnModel": true
