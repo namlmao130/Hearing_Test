@@ -46,16 +46,30 @@
       const repeat = results.find(r => r.ear === ear && r.freq === 1000 && r.phase === 'retest' && r.kind === 'estimate');
       if (first && repeat) retests[ear] = { first: first.level, repeat: repeat.level, difference: Math.abs(first.level-repeat.level), stable: Math.abs(first.level-repeat.level) <= 5 };
     }
-    const retestValues = Object.values(retests);
     const catchRate = catches.length ? falsePositives / catches.length : null;
     const ears = expectedEars || [...new Set(results.map(r => r.ear))];
     const validPoint = (ear, freq, phase) => {
       const rows = results.filter(r => r.ear === ear && r.freq === freq && r.phase === phase);
-      return rows.length === 1 && rows[0].kind === 'estimate' && Number.isFinite(rows[0].level);
+      return rows.length === 1 && rows[0].kind === 'estimate' && Number.isFinite(rows[0].level) &&
+        (!rows[0].engine?.startsWith('bayesian-') || validBayesianUncertainty(rows[0]));
     };
     const complete = ears.length > 0 && ears.every(ear => ['L','R'].includes(ear) && FREQS.every(freq => validPoint(ear,freq,'primary')) && validPoint(ear,1000,'retest'));
     const reliable = complete && catches.length >= 2 && catches.every(t => typeof t.heard === 'boolean') && falsePositives === 0 && ears.every(ear => retests[ear]?.stable) && results.every(r => r.kind === 'estimate');
     return { catches: catches.length, falsePositives, falsePositiveRate: catchRate, retests, reliable };
+  }
+  function validBayesianUncertainty(r) {
+    const u=r.uncertainty;
+    return !!u && u.conditionalOnModel===true && u.unit==='dBFS_peak' && u.credibleMass===0.95 &&
+      [u.lower,u.upper,u.width,r.level].every(Number.isFinite) && u.lower<=r.level && r.level<=u.upper &&
+      Math.abs(u.width-(u.upper-u.lower))<0.11 && u.width<=10.00001 &&
+      r.posterior?.modelFit?.sufficient===true && Number.isFinite(r.posterior.modelFit.logBayesFactor);
+  }
+  function isExperimentalTone(s) {
+    // Check several provenance fields, including outcomes. Omitting only the UI
+    // selector or session flag must not turn a Bayesian estimate into a WHO grade.
+    return s?.engine?.experimental===true || s?.engine?.id==='bayesian' ||
+      /bayesian/i.test(s?.algorithm||'') || /bayesian/i.test(s?.engine?.version||'') ||
+      (s?.results||[]).some(r=>r && (/bayesian/i.test(r.engine||'') || r.uncertainty?.conditionalOnModel===true));
   }
   function normalize(s) { return s.normalize('NFC').toLocaleLowerCase('vi').replace(/[^\p{L}\p{N}\s]/gu, ' ').trim().replace(/\s+/g,' '); }
   function nextSNR(snr, correct) { return Math.max(-9, Math.min(18, snr + (correct ? -3 : 3))); }
@@ -202,6 +216,7 @@
     const intake = intakeDecision(s.intake);
     if (!intake.allowed) block(intake.message);
     if (s.status !== 'completed') block('Phiên đo chưa hoàn thành.');
+    if (isExperimentalTone(s)) block('Bayesian/Active Learning đang ở chế độ nghiên cứu, chưa được xác thực lâm sàng; không tự phân mức WHO từ ước lượng này.');
     if (s.calibrated !== true || s.unit !== 'dB_HL') block('Chưa có kết quả dB HL được hiệu chuẩn; dBFS không dùng phân mức WHO.');
     const ears = s.config?.ears;
     if (!Array.isArray(ears) || ears.length !== 2 || !ears.includes('L') || !ears.includes('R')) block('Cần đo cả hai tai để xác định tai nghe tốt hơn.');
@@ -241,7 +256,7 @@
     else report.recommendation = 'PTA4 nằm trong khoảng bình thường không loại trừ mọi khó khăn nghe. Theo dõi thay đổi, bảo vệ tai khỏi tiếng ồn và đi khám nếu có triệu chứng.';
     return report;
   }
-  const api={ MIN,MAX,CAL_REF,FREQS,SPL_CAP,HL_FLOOR,HL_START,staircase,advance,assessToneQuality,normalize,nextSNR,mix,calibrationOffset,toHL,toDbfs,validateCalibration,pointPlan,calibrationPlan,floorWarnings,environmentMatches,WHO_SOURCE,WHO_PTA_FREQS,WHO_GRADES,whoGrade,pta4,intakeDecision,whoReport };
+  const api={ MIN,MAX,CAL_REF,FREQS,SPL_CAP,HL_FLOOR,HL_START,staircase,advance,assessToneQuality,normalize,nextSNR,mix,calibrationOffset,toHL,toDbfs,validateCalibration,pointPlan,calibrationPlan,floorWarnings,environmentMatches,WHO_SOURCE,WHO_PTA_FREQS,WHO_GRADES,whoGrade,pta4,intakeDecision,whoReport,validBayesianUncertainty,isExperimentalTone };
   if(typeof module!=='undefined' && module.exports) module.exports=api;
   else root.HearingCore=api;
 })(globalThis);

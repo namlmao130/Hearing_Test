@@ -1131,7 +1131,7 @@ button.active, button.is-active, button.selected, button.is-selected, button[ari
         </div>
       </div>
       <p id="infoDesc" class="lumi-body-m" style="margin: 0; color: var(--on-surface-variant);">
-        Hệ thống tích hợp khép kín từ khâu thu thập dữ liệu thính học của người bệnh, tối ưu hóa bằng AI Bayesian, đến khả năng mô phỏng tín hiệu thời gian thực giúp người thân trải nghiệm và thấu cảm.
+        Hệ thống nghiên cứu gồm tự đo âm đơn có truy vết, Bayesian Active Learning theo từng tần số, kiểm tra chất lượng và mô phỏng tín hiệu thời gian thực.
       </p>
       <div class="info-metrics" id="infoMetrics">
         <div class="metric-box">
@@ -1144,7 +1144,7 @@ button.active, button.is-active, button.selected, button.is-selected, button[ari
         </div>
         <div class="metric-box">
           <div class="metric-label">Giá trị đầu ra</div>
-          <div class="metric-value" id="valImpact">Chẩn đoán chính xác &amp; Tăng sự thấu cảm</div>
+          <div class="metric-value" id="valImpact">Kết quả có truy vết &amp; mô phỏng thấu cảm</div>
         </div>
       </div>
     </div>
@@ -1167,21 +1167,21 @@ button.active, button.is-active, button.selected, button.is-selected, button[ari
 
     // Node definitions (Virtual 660x380 pixel grid coordinates)
     const NODES = [
-      { id: 'n1', label: 'Người lớn tuổi', sub: 'Bệnh nhân', type: 'user', vx: 120, vy: 65, flow: 1, tag: 'USER' },
+      { id: 'n1', label: 'Người tự đo', sub: 'Người tham gia', type: 'user', vx: 120, vy: 65, flow: 1, tag: 'USER' },
       { id: 'n2', label: 'DSP Pure-Tone', sub: 'Trình phát âm đo', type: 'dsp', vx: 120, vy: 185, flow: 1, tag: 'HARDWARE' },
-      { id: 'n3', label: 'AI Bayesian Active', sub: 'Tối ưu điểm test', type: 'ai', vx: 260, vy: 300, flow: 1, tag: 'CORE AI' },
-      { id: 'n4', label: 'CSDL Audiogram', sub: 'Điểm giao thoa', type: 'db', vx: 400, vy: 300, flow: 0, tag: 'DATA HUB' }, // 0 = Both
-      { id: 'n5', label: 'LLM Trợ lý Y tế', sub: 'Chẩn đoán & Tư vấn', type: 'llm', vx: 400, vy: 185, flow: 1, tag: 'AI MODEL' },
-      { id: 'n6', label: 'DSP Realtime Filter', sub: 'Bộ lọc mô phỏng', type: 'dsp', vx: 540, vy: 185, flow: 2, tag: 'DSP ENGINE' },
-      { id: 'n7', label: 'Người thân', sub: 'Con cháu', type: 'user', vx: 540, vy: 65, flow: 2, tag: 'USER' }
+      { id: 'n3', label: 'Bayesian Active', sub: 'Chọn mức âm tiếp', type: 'ai', vx: 260, vy: 300, flow: 1, tag: 'RESEARCH' },
+      { id: 'n4', label: 'Lịch sử cục bộ', sub: 'Dữ liệu có truy vết', type: 'db', vx: 400, vy: 300, flow: 0, tag: 'LOCAL DATA' }, // 0 = Both
+      { id: 'n5', label: 'Báo cáo chất lượng', sub: 'Bất định & cảnh báo', type: 'llm', vx: 400, vy: 185, flow: 1, tag: 'REPORT' },
+      { id: 'n6', label: 'Web Audio EQ', sub: 'Bộ lọc mô phỏng', type: 'dsp', vx: 540, vy: 185, flow: 2, tag: 'DSP ENGINE' },
+      { id: 'n7', label: 'Người nghe mô phỏng', sub: 'Trải nghiệm gần đúng', type: 'user', vx: 540, vy: 65, flow: 2, tag: 'USER' }
     ];
 
     // Edges definitions with source/target and flow affinity
     const EDGES = [
       { id: 'e1', from: 'n1', to: 'n2', flow: 1, label: 'Tương tác' },
       { id: 'e2', from: 'n2', to: 'n3', flow: 1, label: 'Phản hồi' },
-      { id: 'e3', from: 'n3', to: 'n4', flow: 1, label: 'Ghi Audiogram' },
-      { id: 'e4', from: 'n4', to: 'n5', flow: 1, label: 'Dữ liệu chẩn đoán' },
+      { id: 'e3', from: 'n3', to: 'n4', flow: 1, label: 'Lưu kết quả' },
+      { id: 'e4', from: 'n4', to: 'n5', flow: 1, label: 'Kiểm tra điều kiện' },
       { id: 'e5', from: 'n4', to: 'n6', flow: 2, label: 'Truyền Audiogram' },
       { id: 'e6', from: 'n6', to: 'n7', flow: 2, label: 'Âm thanh mô phỏng' }
     ];
@@ -1192,27 +1192,27 @@ button.active, button.is-active, button.selected, button.is-selected, button[ari
         badge: 'TỔNG THỂ',
         badgeClass: 'badge-all',
         title: 'Hệ thống đo thính lực & mô phỏng thấu cảm',
-        desc: 'Sơ đồ thể hiện hai luồng xử lý chính: Luồng thu thập dữ liệu thính học bằng AI Bayesian và Luồng mô phỏng hiệu ứng mất thính lực thời gian thực.',
-        tech: 'Bayesian Active Learning, Realtime DSP, LLM Assistant',
-        challenge: 'Đồng bộ hóa tín hiệu, Hiệu chuẩn phần cứng đa thiết bị',
-        impact: 'Tối ưu hóa quy trình khám & Nâng cao sự cảm thông trong gia đình'
+        desc: 'Sơ đồ thể hiện hai luồng hiện có: tự đo âm đơn bằng Bayesian nghiên cứu hoặc staircase đối chiếu, và mô phỏng hiệu ứng mất thính lực gần đúng.',
+        tech: 'Bayesian Active Learning, Web Audio, Local JSON',
+        challenge: 'Hiệu chuẩn, nhiễu nền, tính nhất quán phản hồi và kiểm định trên người',
+        impact: 'Hỗ trợ nghiên cứu có truy vết & nâng cao sự cảm thông'
       },
       flow1: {
         badge: 'LUỒNG 1: ĐO THÍNH LỰC',
         badgeClass: 'badge-1',
-        title: 'Đo thính lực tối ưu bằng AI Bayesian Active Learning',
-        desc: 'Tín hiệu Pure-tone phát ra từ DSP. Phản hồi từ bệnh nhân được mô hình AI Bayesian xử lý để dự đoán ngưỡng nghe tiếp theo, với mục tiêu giảm số lượt thử; chưa triển khai Bayesian và chưa có benchmark.',
-        tech: 'Bayesian Active Learning, Active Noise Suppression, Pure-tone Synthesis',
-        challenge: 'Hardware Calibration (Hiệu chuẩn độ nhạy tai nghe & Micro)',
-        impact: 'Mục tiêu nghiên cứu; chưa có số liệu kiểm chứng thời gian và độ chính xác'
+        title: 'Đo âm đơn bằng Bayesian Active Learning nghiên cứu',
+        desc: 'Engine v2 đã triển khai posterior ngưỡng độc lập từng tần số, chọn mức phát theo thông tin kỳ vọng, khoảng 95%, kết quả ngoài dải và dừng khi chưa đủ bằng chứng. Mô phỏng seeded đã có; chưa kiểm định lâm sàng.',
+        tech: 'Bayesian Yes/No Threshold, Expected Information Gain, Pure-tone Synthesis',
+        challenge: 'Hiệu chuẩn phần cứng, nhiễu nền, sai mô hình & kiểm định trên người',
+        impact: 'Giảm sai số trong mô phỏng phù hợp mô hình; chưa chứng minh hiệu quả lâm sàng'
       },
       flow2: {
         badge: 'LUỒNG 2: DSP MÔ PHỎNG',
         badgeClass: 'badge-2',
-        title: 'Bộ lọc DSP mô phỏng mất thính lực thời gian thực',
-        desc: 'Lấy dữ liệu từ bản đồ Audiogram thu được để làm tham số cho bộ lọc FIR/IIR. Người thân có thể đeo tai nghe để trải nghiệm mô phỏng gần đúng, không tái tạo đầy đủ trải nghiệm nghe của người bệnh.',
-        tech: 'Realtime FIR/IIR Filter, Equalization Matching, Spatial Audio',
-        challenge: 'Độ trễ thấp (<10ms) & Tái tạo chính xác sự méo tần số cao',
+        title: 'Bộ lọc Web Audio mô phỏng mất thính lực',
+        desc: 'Dùng các dải EQ Web Audio để minh họa suy giảm theo tần số. Người nghe có thể trải nghiệm mô phỏng gần đúng; kết quả không tái tạo đầy đủ méo tiếng, tuyển mộ âm lượng hoặc xử lý thính giác trung ương.',
+        tech: 'Web Audio Biquad Filters, Six-band Equalization',
+        challenge: 'Phổ thiết bị, độ trễ trình duyệt & giới hạn của mô hình EQ',
         impact: 'Tạo sự thấu cảm (Empathy) giúp con cháu hiểu khó khăn của ông bà'
       }
     };

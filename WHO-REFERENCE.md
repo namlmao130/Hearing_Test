@@ -30,6 +30,8 @@ PTA4 thấp không loại trừ khó nghe trong nhiễu, giảm nghe ở tần s
 
 Những điều kiện sau là lựa chọn triển khai thận trọng của dự án, **không phải một quy trình do WHO thẩm định**:
 
+- Phiên dùng Bayesian/Active Learning bị chặn phân mức WHO trong bản hiện tại. Engine có thể tạo ngưỡng dB HL sau hiệu chuẩn, nhưng chưa được kiểm định lâm sàng; khoảng hậu nghiệm của mô hình không thay cho bằng chứng độ chính xác. Chế độ staircase đối chiếu vẫn phải qua toàn bộ gate dưới đây.
+
 - Phạm vi tự đo từ 18 tuổi. Cần trả lời đầy đủ câu hỏi sức khỏe trước khi phát âm thử/đo; đau hoặc chảy dịch tai thì hướng dẫn khám trước, nghe giảm đột ngột thì hướng dẫn khám ngay.
 - Chỉ phân mức với phiên âm đơn hoàn thành, cả hai tai, đơn vị dB HL và hồ sơ hiệu chuẩn hợp lệ trong toàn bộ thời gian phiên. Hồ sơ hết hạn sau ngày đo không tự làm mất giá trị lịch sử; hồ sơ hết hạn trong phiên thì chặn phân mức.
 - Cần xác nhận đúng thiết bị, âm lượng, môi trường; lưu tần số lấy mẫu và trình duyệt tại lúc đo để đối chiếu hồ sơ.

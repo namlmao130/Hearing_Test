@@ -122,6 +122,10 @@ for(const change of [
 {const s=sessionFixture();s.results.find(r=>r.freq===8000).hl=40;s.results.find(r=>r.freq===8000).level=-46;assert.equal(C.whoReport(s).grade.code,'normal');assert.match(C.whoReport(s).recommendation,/tần số/);}
 assert.equal(C.whoReport({type:'speech'}).eligible,false);
 assert.equal(C.whoReport(null).eligible,false);
+// Experimental provenance blocks WHO on live results, history and exports.
+for(const mark of [s=>s.engine={id:'bayesian'},s=>s.engine={experimental:true},s=>s.algorithm='bayesian-threshold-v1',s=>s.results[0].engine='bayesian-threshold-v1',s=>s.results[0].uncertainty={conditionalOnModel:true}]){
+ const s=sessionFixture();mark(s);assert.equal(C.isExperimentalTone(s),true);const report=C.whoReport(s);assert.equal(report.eligible,false);assert.equal(report.grade,null);assert.ok(report.blockers.some(t=>t.includes('Bayesian')));
+}
 {const s=sessionFixture();s.results=s.results.filter(r=>r.ear==='L');assert.equal(C.assessToneQuality(s.results,s.trials,['L','R']).reliable,false);}
 
 // Run the real page result renderer against a small DOM double: this verifies
@@ -146,8 +150,8 @@ vm.runInContext(page.slice(page.indexOf("$('startTone').onclick="),page.indexOf(
 vm.runInContext(page.slice(page.indexOf("$('startSpeech').onclick="),page.indexOf('function renderSpeech(')),gated);
 handlers.startTone.onclick();handlers.startSpeech.onclick();assert.equal(gated.session,null);
 // A prepared calibrated start captures all eligibility evidence in the session.
-{const fields={startTone:{},device:{value:'Test headphones'},quiet:{checked:true},ready:{checked:true},ears:{value:'both'},useCal:{value:'yes'},calSame:{checked:true},noiseMethod:{value:'documented'},noiseDetails:{value:'Room record 123'},result:{},toneSetup:{},toneRun:{}};
- const p=profile(),start={C,FREQS:F,TONE_ORDER:F.map(freq=>({freq,phase:'primary'})),session:null,busy:false,cal:p,checkIntake:()=>true,$:id=>fields[id],stopSound:()=>{},calGate:()=>({ok:true,plan:C.calibrationPlan(p)}),newStair:()=>({}),createSession:()=>({type:'tone'}),envInfo:()=>({...p.env}),save:()=>{},lockTabs:()=>{},renderTone:()=>{}};
+{const fields={toneMethod:{value:'staircase'},methodBadge:{},startTone:{},device:{value:'Test headphones'},quiet:{checked:true},ready:{checked:true},ears:{value:'both'},useCal:{value:'yes'},calSame:{checked:true},noiseMethod:{value:'documented'},noiseDetails:{value:'Room record 123'},result:{},toneSetup:{},toneRun:{}};
+ const p=profile(),start={C,FREQS:F,TONE_ORDER:F.map(freq=>({freq,phase:'primary'})),session:null,busy:false,cal:p,checkIntake:()=>true,$:id=>fields[id],stopSound:()=>{},calGate:()=>({ok:true,plan:C.calibrationPlan(p)}),warn:message=>{throw Error(message);},newStair:()=>({}),createSession:()=>({type:'tone'}),envInfo:()=>({...p.env}),save:()=>{},lockTabs:()=>{},renderTone:()=>{}};
  vm.createContext(start);vm.runInContext(page.slice(page.indexOf("$('startTone').onclick="),page.indexOf('function renderTone(')),start);fields.startTone.onclick();
  assert.equal(start.session.unit,'dB_HL');assert.equal(start.session.config.calibrationSetupConfirmed,true);assert.equal(start.session.config.noiseAssessment.details,'Room record 123');assert.equal(start.session.config.audioEnvironment.sampleRate,48000);assert.equal(start.points.length,16);
 }

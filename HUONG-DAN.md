@@ -12,6 +12,14 @@ Mở `Demo.html` rồi chọn **Bắt đầu tự kiểm tra**, hoặc mở tr�
 
 Chi tiết quy tắc, nguồn chính thức và những phần cần kiểm định tiếp: [WHO-REFERENCE.md](WHO-REFERENCE.md). Đây là nâng cấp theo tài liệu WHO, **chưa phải sản phẩm được WHO chứng nhận hoặc đã xác thực độ chính xác lâm sàng**.
 
+## Bản 3.0 — Bayesian/Active Learning nghiên cứu
+
+- Bài âm đơn mặc định dùng `bayesian-threshold-v2`: posterior ngưỡng độc lập cho từng tai/tần số và chọn mức phát theo expected information gain. Có thể chọn lại phương pháp tăng 5/giảm 10 dB để đối chiếu.
+- Mỗi estimate có khoảng hậu nghiệm 95%, lý do dừng và dữ liệu audit. Điểm không đủ bằng chứng sau 48 lượt được ghi `inconclusive`; ngưỡng ngoài dải không bị ép thành số đo.
+- Scheduler kiểm tra mức phát theo dải hiệu chuẩn trước mỗi âm. Phản hồi được gắn với snapshot của âm đã phát; callback cũ sau khi dừng không được cập nhật lượt mới.
+- Bayesian là chế độ nghiên cứu và bị chặn khỏi phân mức WHO trong core, kể cả khi xem lịch sử hoặc xuất JSON. Khoảng hậu nghiệm chỉ có điều kiện trên mô hình, không bao gồm sai số hiệu chuẩn/nhiễu nền.
+- Chạy `node verify-bayesian.cjs` cho kiểm tra engine; thêm `--benchmark` để xem báo cáo mô phỏng seeded. Thiết kế, số liệu và giới hạn được ghi tại [BAYESIAN-ACTIVE-LEARNING.md](BAYESIAN-ACTIVE-LEARNING.md).
+
 ## Tận dụng mã cũ
 
 - Giữ giao diện mô phỏng, biểu đồ tần số theo thang log, các mức và phần che chữ.
