@@ -1,0 +1,319 @@
+:root {
+  color - scheme : light;
+  --bg : #f5f7f2;
+  --ink : #243629;
+  --muted : #59675d;
+  --green : #345b42;
+  --line : #d8e1d5;
+  --orange : #af582f;
+}
+
+*{ box - sizing : border - box; }
+
+body {
+margin:
+  0;
+color:
+  var(--ink);
+font:
+  16px / 1.55 system - ui, sans - serif;
+background:
+  var(--bg);
+}
+
+main {
+  max - width : 1050px;
+margin:
+  auto;
+padding:
+  28px 22px 60px;
+}
+a {
+color:
+  var(--green);
+}
+header {
+display:
+  flex;
+gap:
+  20px;
+  align - items : center;
+  justify - content : space - between;
+}
+h1 {
+margin:
+  7px 0 12px;
+  font - size : 32px;
+  line - height : 1.2;
+}
+h2 {
+margin:
+  0 0 14px;
+  font - size : 23px;
+}
+h3 { font - size : 18px; }
+p {
+margin:
+  8px 0 16px;
+}
+
+.eyebrow {
+color:
+  var(--green);
+  font - size : 12px;
+  font - weight : 750;
+  letter - spacing : .15em;
+}
+
+.muted, small {
+color:
+  var(--muted);
+}
+
+.card {
+margin:
+  18px 0;
+padding:
+  24px;
+background:
+#fff;
+border:
+  1px solid var(--line);
+  border - radius : 18px;
+}
+
+.notice {
+padding:
+  14px 18px;
+background:
+#fff7e9;
+  border - left : 4px solid #c78042;
+  border - radius : 8px;
+}
+
+.grid {
+display:
+  grid;
+  grid - template - columns : 1fr 1fr;
+gap:
+  20px;
+}
+.tabs {
+display:
+  flex;
+  flex - wrap : wrap;
+gap:
+  8px;
+margin:
+  22px 0;
+}
+.actions {
+display:
+  flex;
+  flex - wrap : wrap;
+gap:
+  10px;
+  margin - top : 18px;
+}
+
+button, .button {
+display:
+  inline - block;
+padding:
+  11px 17px;
+color:
+  var(--ink);
+font:
+  inherit;
+  font - weight : 650;
+  text - decoration : none;
+cursor:
+  pointer;
+background:
+#edf2e9;
+border:
+  1px solid var(--line);
+  border - radius : 10px;
+}
+
+button.primary, .tabs button[aria - selected = "true"] {
+color:
+  white;
+background:
+  var(--green);
+  border - color : var(--green);
+}
+
+button.danger {
+color:
+#a22c26;
+background:
+#fff2ee;
+}
+button : disabled {
+cursor:
+  not - allowed;
+opacity:
+  .45;
+}
+
+button : focus - visible, a : focus - visible, input : focus - visible, select : focus - visible,
+    textarea : focus - visible {
+outline:
+  3px solid #d98d39;
+  outline - offset : 3px;
+}
+
+label {
+display:
+  block;
+margin:
+  12px 0 6px;
+}
+.button - label {
+margin:
+  0;
+}
+
+input : not([type = "checkbox"]), select, textarea {
+width:
+  100 % ;
+padding:
+  10px;
+color:
+  var(--ink);
+font:
+  inherit;
+background:
+  white;
+border:
+  1px solid #aebdaf;
+  border - radius : 8px;
+}
+
+textarea { min - height : 75px; }
+[hidden] {
+display:
+  none !important;
+}.status {
+  min - height : 35px;
+  font - size : 19px;
+  font - weight : 650;
+}
+.pill {
+display:
+  inline - block;
+padding:
+  4px 12px;
+  font - size : 13px;
+background:
+#eef3e9;
+  border - radius : 20px;
+}
+.table - wrap {
+overflow:
+  auto;
+}
+table {
+width:
+  100 % ;
+  font - size : 14px;
+  border - collapse : collapse;
+}
+td, th {
+padding:
+  10px;
+  text - align : left;
+  border - bottom : 1px solid var(--line);
+}
+svg {
+display:
+  block;
+width:
+  100 % ;
+height:
+  auto;
+  max - height : 420px;
+}
+.sample {
+margin:
+  12px 0;
+padding:
+  14px;
+background:
+#f6f8f3;
+  border - radius : 10px;
+}
+.history - item {
+padding:
+  16px 0;
+  border - top : 1px solid var(--line);
+}
+.progress {
+height:
+  7px;
+margin:
+  14px 0;
+overflow:
+  hidden;
+background:
+#e7eee2;
+  border - radius : 5px;
+}
+.progress > div {
+width:
+  0;
+height:
+  100 % ;
+background:
+  var(--green);
+transition:
+  width.2s;
+}
+#storageWarning{position : sticky; top : 0; z - index : 3; }
+footer {
+  margin - top : 28px;
+color:
+  var(--muted);
+  font - size : 13px;
+}
+
+.calt input {
+width:
+  96px;
+padding:
+  7px;
+}
+.calt td, .calt th { white - space : nowrap; }
+.calt td button {
+padding:
+  6px 11px;
+}
+.calt td.num {
+color:
+  var(--muted);
+  font - variant - numeric : tabular - nums;
+}
+ol.steps li {
+margin:
+  6px 0;
+}
+#calMessages li{margin : 4px 0; }
+#calMessages.ok{color : #2c5a38; }
+
+@media(max - width : 650px) {
+  .grid { grid - template - columns : 1fr; }
+  header {
+  display:
+    block;
+  }
+  main {
+  padding:
+    20px 14px;
+  }
+  .card {
+  padding:
+    18px;
+  }
+  h1 { font - size : 27px; }
+}

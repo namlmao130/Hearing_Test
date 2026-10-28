@@ -4,10 +4,10 @@
 // cannot establish acoustic calibration or clinical measurement accuracy.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const path = require('node:path');
 const vm = require('node:vm');
-const B = require('./bayesian-core.js');
-const C = require('./hearing-core.js');
+const project = require('./project.cjs');
+const B = require('../src/core/bayesian-core.js');
+const C = require('../src/core/hearing-core.js');
 
 const DEFAULT_PLAN = Object.freeze({ min: -70, max: -10, initial: -35 });
 const SEED = 0x6841bc29;
@@ -81,7 +81,7 @@ function validate() {
   assert.ok(B.DEFAULTS.targetWidth > 0);
   const browser = { console };
   vm.createContext(browser);
-  vm.runInContext(fs.readFileSync(path.join(__dirname, 'bayesian-core.js'), 'utf8'), browser);
+  vm.runInContext(project.read('src/core/bayesian-core.js'), browser);
   assert.equal(browser.BayesianHearing.VERSION, B.VERSION, 'browser and CommonJS entry points');
 
   for (const options of [null, 'invalid', { min: NaN }, { max: Infinity },
@@ -154,8 +154,8 @@ function validate() {
   // Exercise the page's synchronous response bridge with a real Bayesian
   // state. The response must use the completed presentation snapshot, and a
   // stale request must not enter the posterior.
-  const page = fs.readFileSync(path.join(__dirname, 'Tu-do-thinh-luc.html'), 'utf8');
-  assert.ok(page.includes('<script src="bayesian-core.js"></script>'));
+  const html = project.read('Tu-do-thinh-luc.html'), page = project.selfTestSource();
+  assert.ok(html.includes('<script src="src/core/bayesian-core.js"></script>'));
   assert.ok(page.includes("if(!Number.isFinite(level)||level<bounds.min||level>bounds.max)"));
   assert.ok(page.includes("request!==playbackId"));
   const startFields = {
@@ -367,7 +367,7 @@ if (require.main === module) {
       assert.ok(find('matched_logistic').posteriorIntervals.coverageAllKnownTruthSessions>=0.9);
       assert.ok(find('shallow_slope').posteriorIntervals.coverageAllKnownTruthSessions>=0.85);
     }
-    if (args.includes('--write')) fs.writeFileSync(path.join(__dirname, extended?'bayesian-validation.json':'bayesian-benchmark.json'), JSON.stringify(report, null, 2) + '\n');
+    if (args.includes('--write')) fs.writeFileSync(project.fromRoot('reports', extended?'bayesian-validation.json':'bayesian-benchmark.json'), JSON.stringify(report, null, 2) + '\n');
     process.stdout.write(JSON.stringify({ validation, ...report }, null, 2) + '\n');
   } else {
     console.log(`PASS: Bayesian invariants, boundaries, calibration windows, replay and response-quality checks (${validation.engine}).`);

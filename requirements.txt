@@ -1,0 +1,4 @@
+# This project has no Python runtime dependencies.
+#
+# The application runs with browser APIs. Tests use only built-in Node.js
+# modules; see package.json for the required Node.js version and commands.

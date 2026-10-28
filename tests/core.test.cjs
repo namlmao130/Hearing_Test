@@ -1,9 +1,11 @@
-const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-const C=require('./hearing-core.js');
-for(const name of ['Demo.html','Tu-do-thinh-luc.html','interactive_visual_im.html']){
- const html=fs.readFileSync(__dirname+'/'+name,'utf8');
+const assert=require('node:assert/strict'),vm=require('node:vm');
+const project=require('./project.cjs');
+const C=require('../src/core/hearing-core.js');
+for(const name of ['Demo.html','Tu-do-thinh-luc.html','docs/architecture.html']){
+ const html=project.read(name);
  for(const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(match[1],{filename:name});
 }
+for(const name of ['src/app/demo.js',...project.SELF_TEST_FILES])new vm.Script(project.read(name),{filename:name});
 function run(answer){const s=C.staircase();for(let i=0;i<45;i++){const r=C.advance(s,answer(s.level));if(r)return r;}throw Error('Did not terminate');}
 assert.equal(run(()=>true).kind,'below_range');
 assert.equal(run(()=>false).kind,'above_range');
@@ -63,7 +65,7 @@ assert.equal(C.assessToneQuality([{ear:'L',freq:1000,phase:'primary',kind:'estim
 {const p=C.pointPlan(95.04,7);assert.ok(95.04+(p.max-C.CAL_REF)<=C.SPL_CAP);}
 // Exercise the actual save handler without a browser: saving an import must not
 // relabel its measurements as having been made on this machine.
-const page=fs.readFileSync(__dirname+'/Tu-do-thinh-luc.html','utf8');
+const page=project.selfTestSource();
 const handler=page.slice(page.indexOf("$('calSave').onclick="),page.indexOf("$('calExport').onclick="));
 const fields={calSave:{},calRemeasured:{checked:false},calToneStatus:{textContent:''}};
 const savedProfile=profile(),context={C,$:id=>fields[id],readProfile:()=>structuredClone(savedProfile),profileProblems:p=>C.validateCalibration(p).problems,envInfo:()=>({sampleRate:44100,userAgent:'Other machine'}),persistCal:()=>true,updateCalStatus:()=>{},refreshCal:()=>{},cal:null};

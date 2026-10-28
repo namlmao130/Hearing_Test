@@ -50,18 +50,16 @@ Chế độ tăng 5/giảm 10 dB vẫn có trong giao diện để đối chiế
 Chạy:
 
 ```powershell
-node verify.cjs
-node verify-bayesian.cjs
-node verify-bayesian.cjs --benchmark
-node verify-bayesian.cjs --validation
-node verify-reliability.cjs
+npm test
+npm run benchmark
+npm run validation
 ```
 
-`verify-bayesian.cjs` kiểm tra bất biến mức phát, biên thập phân từ hiệu chuẩn, kết quả ngoài dải, dữ liệu hỏng, cập nhật hai lần, replay xác định và các ngưỡng hồi quy của mô phỏng seeded.
+`tests/bayesian.test.cjs` kiểm tra bất biến mức phát, biên thập phân từ hiệu chuẩn, kết quả ngoài dải, dữ liệu hỏng, cập nhật hai lần, replay xác định và các ngưỡng hồi quy của mô phỏng seeded.
 
 Benchmark mặc định dùng 48 lần chạy bộ ước lượng từng điểm/tần số cho mỗi kịch bản. Với cùng seed cũ, v3 giảm số `estimate` của phản hồi 50/50 từ 23/48 (v2) xuống 1/48. Coverage toàn bộ lượt có ngưỡng thật ở kịch bản slope 7 tăng từ 75% lên 89,58%; đây chưa phải bằng chứng coverage đạt 95%.
 
-`bayesian-validation.json` dùng ba seed khác, cố định trước khi xem kết quả: 388606925, 2212895493, 4043887474; mỗi seed 64 lần/kịch bản, tổng 192. Không chỉnh lại engine theo kết quả bộ mở rộng này. Bảng dưới ghi riêng tỷ lệ cho ra estimate và coverage để tránh che giấu những ca chưa kết luận được:
+`reports/bayesian-validation.json` dùng ba seed khác, cố định trước khi xem kết quả: 388606925, 2212895493, 4043887474; mỗi seed 64 lần/kịch bản, tổng 192. Không chỉnh lại engine theo kết quả bộ mở rộng này. Bảng dưới ghi riêng tỷ lệ cho ra estimate và coverage để tránh che giấu những ca chưa kết luận được:
 
 | Kịch bản | Estimate / 192 | MAE chỉ trên estimate (dB) | Coverage toàn bộ / chỉ estimate | Phản hồi trung bình |
 |---|---:|---:|---:|---:|
@@ -80,7 +78,7 @@ JSON chứa cả khoảng Wilson 95% cho tỷ lệ estimate và coverage; nhữn
 
 ## Lưu trữ và xử lý gián đoạn v3
 
-- `session-store.js` kiểm tra phiên bản, kiểu dữ liệu, đơn vị, điểm đo, phản hồi, khoảng bất định và mã phiên trước khi dữ liệu được hiển thị hoặc ghi lại. Giữ schema 1 để đọc lịch sử cũ đúng cấu trúc; không tự chuyển phiên bản engine cũ thành v3.
+- `src/storage/session-store.js` kiểm tra phiên bản, kiểu dữ liệu, đơn vị, điểm đo, phản hồi, khoảng bất định và mã phiên trước khi dữ liệu được hiển thị hoặc ghi lại. Giữ schema 1 để đọc lịch sử cũ đúng cấu trúc; không tự chuyển phiên bản engine cũ thành v3.
 - Dữ liệu hỏng hoặc phiên bản chưa hỗ trợ: giữ nguyên chuỗi JSON gốc, hiện các phiên hợp lệ và khóa ghi lịch sử. Phiên mới vẫn ở bộ nhớ; phải xuất JSON. Không tự xóa hoặc ghi đè phần lỗi.
 - Lỗi quota/quyền lưu không xóa dữ liệu trước đó. Phát hiện lịch sử thay đổi từ tab khác trước khi ghi; giữ dữ liệu mới của tab kia. Đây là kiểm tra xung đột, không phải cơ sở dữ liệu giao dịch đa tab; nên chỉ đo trong một tab.
 - Tab Lịch sử có xuất toàn bộ phiên, tải dữ liệu gốc và nhập một phiên/danh sách từ JSON. File tối đa 10 MB, tối đa 1.000 phiên; trùng mã nhưng khác dữ liệu đo bị từ chối. Import không ghi đè và không phát âm thanh. Hồ sơ hiệu chuẩn dùng tab nhập riêng.

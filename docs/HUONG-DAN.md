@@ -19,7 +19,7 @@ Chi tiết quy tắc, nguồn chính thức và những phần cần kiểm đ�
 - Mỗi estimate có khoảng hậu nghiệm 95%, lý do dừng và dữ liệu audit. Điểm không đủ bằng chứng sau 48 lượt được ghi `inconclusive`; ngưỡng ngoài dải không bị ép thành số đo.
 - Scheduler kiểm tra mức phát theo dải hiệu chuẩn trước mỗi âm. Phản hồi được gắn với snapshot của âm đã phát; callback cũ sau khi dừng không được cập nhật lượt mới.
 - Bayesian là chế độ nghiên cứu và bị chặn khỏi phân mức WHO trong core, kể cả khi xem lịch sử hoặc xuất JSON. Khoảng hậu nghiệm chỉ có điều kiện trên mô hình, không bao gồm sai số hiệu chuẩn/nhiễu nền.
-- Chạy `node verify-bayesian.cjs` cho kiểm tra engine; thêm `--benchmark` để xem báo cáo mô phỏng seeded. Thiết kế, số liệu và giới hạn được ghi tại [BAYESIAN-ACTIVE-LEARNING.md](BAYESIAN-ACTIVE-LEARNING.md).
+- Chạy `npm test` để kiểm tra toàn bộ mã; `npm run benchmark` để xem báo cáo mô phỏng seeded. Thiết kế, số liệu và giới hạn được ghi tại [BAYESIAN-ACTIVE-LEARNING.md](BAYESIAN-ACTIVE-LEARNING.md).
 
 ## Tận dụng mã cũ
 
@@ -76,9 +76,9 @@ Giới hạn cần biết: đây là hiệu chuẩn tại tần số 8 điểm b
 
 ### Kiểm tra phần mềm
 
-Chạy thêm `node verify-bayesian.cjs`, `node verify-reliability.cjs`; bộ mô phỏng mở rộng dùng `node verify-bayesian.cjs --validation`. Thêm `--write` để tái tạo JSON báo cáo. Không lệnh nào phát âm hoặc mở trình duyệt.
+Chạy `npm test`; bộ mô phỏng mở rộng dùng `npm run validation`. Dùng `npm run reports:write` để tái tạo JSON trong `reports/`. Không lệnh nào phát âm hoặc mở trình duyệt.
 
-Chạy `node verify.cjs` trong thư mục chứa `Demo.html`, `Tu-do-thinh-luc.html` và `hearing-core.js`. Bộ kiểm tra gồm thuật toán ngưỡng, quy đổi đơn vị, giới hạn SPL, dữ liệu nhập hỏng, ngày hiệu chuẩn, phiên thiếu kết quả và việc giữ nguyên môi trường gốc khi lưu hồ sơ nhập. Đây là kiểm thử mã, chưa phải kiểm định bằng thiết bị âm học hoặc người tham gia.
+Chạy `npm test` tại thư mục dự án. Bộ kiểm tra gồm thuật toán ngưỡng trong `src/core`, quy đổi đơn vị, giới hạn SPL, dữ liệu nhập hỏng, ngày hiệu chuẩn, phiên thiếu kết quả và việc giữ nguyên môi trường gốc khi lưu hồ sơ nhập. Đây là kiểm thử mã, chưa phải kiểm định bằng thiết bị âm học hoặc người tham gia.
 
 ## Lời nói trong nhiễu
 

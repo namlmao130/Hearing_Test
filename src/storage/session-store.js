@@ -1,7 +1,7 @@
 /* Local-only session persistence. No audio, network or DOM side effects. */
 (function (root) {
   'use strict';
-  const C = typeof module !== 'undefined' && module.exports ? require('./hearing-core.js') : root.HearingCore;
+  const C = typeof module !== 'undefined' && module.exports ? require('../core/hearing-core.js') : root.HearingCore;
   const MAX_BYTES = 10 * 1024 * 1024, MAX_SESSIONS = 1000;
   const record = x => !!x && typeof x === 'object' && !Array.isArray(x);
   const text = (x, max = 500) => typeof x === 'string' && x.length <= max;

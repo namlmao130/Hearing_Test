@@ -67,4 +67,4 @@ Dữ liệu nằm trong localStorage của trình duyệt. File JSON chứa cả
 
 ## Kiểm tra mã nguồn
 
-Chạy `node verify.cjs`. Bộ kiểm tra bao gồm các thuật toán cũ, biên phân mức WHO, PTA4 chưa làm tròn, tiêu chí một bên, dữ liệu ngoài dải/thiếu/trùng, hiệu chuẩn theo thời gian phiên, dữ liệu lịch sử, chặn bắt đầu theo câu hỏi sức khỏe và hiển thị báo cáo. Các kiểm tra không phát âm thanh hoặc thao tác trình duyệt và không thay kiểm định âm học/lâm sàng.
+Chạy `npm test`. Bộ kiểm tra bao gồm thuật toán cốt lõi, biên phân mức WHO, PTA4 chưa làm tròn, tiêu chí một bên, dữ liệu ngoài dải/thiếu/trùng, hiệu chuẩn theo thời gian phiên, dữ liệu lịch sử, chặn bắt đầu theo câu hỏi sức khỏe và hiển thị báo cáo. Các kiểm tra không phát âm thanh hoặc thao tác trình duyệt và không thay kiểm định âm học/lâm sàng.

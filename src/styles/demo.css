@@ -1,0 +1,624 @@
+    :root {
+      --bg - main : #FAFBF8;
+      --bg - card : #EFF5EC;
+      --sage - dark : #4B5E48;
+      --sage - mid : #6E826B;
+      --sage - light : #D7E5D0;
+      --accent - green : #9BE564;
+      --line - orange : #C87A51;
+      --text - dark : #232B22;
+      --text - muted : #6C786A;
+    }
+
+    .research - notice {
+    margin:
+      12px 24px;
+    padding:
+      12px;
+    border:
+      1px solid #b8c8bb;
+      border - radius : 8px;
+    }
+
+    .self - test - callout {
+      margin - bottom : 20px;
+    padding:
+      18px;
+    background:
+#e2efda;
+      border - radius : 16px;
+    }
+
+    .self - test - callout h2 { margin - top : 0; }
+    .self - test - callout p { margin - bottom : 12px; }
+
+    .primary - link {
+    display:
+      inline - block;
+    padding:
+      12px 18px;
+    color:
+      white;
+      font - weight : bold;
+      text - decoration : none;
+    background:
+# 345b42;
+      border - radius : 10px;
+    }
+
+    .simulation - note {
+      margin - bottom : 16px;
+      font - size : 13px;
+    }
+    .audio - file - label {
+    display:
+      block;
+      margin - top : 18px;
+    }
+    .audio - file - input {
+      max - width : 100 % ;
+      margin - top : 8px;
+    }
+    .audio - file - note {
+      margin - top : 8px;
+      font - size : 12px;
+    }
+    .frequency - labels {
+      margin - bottom : 6px;
+      font - size : 13px;
+      font - weight : 700;
+      text - align : center;
+    }
+#audiogramSvg{position : relative; z - index : 4; overflow : visible; }
+    .plot - note {
+      margin - top : 4px;
+    color:
+# 3b82f6;
+    }
+    .audible - summary {
+      margin - top : 4px;
+    color:
+      var(--sage - dark);
+    }
+    *{
+      box - sizing : border - box;
+    margin:
+      0;
+    padding:
+      0;
+      font - family : -apple - system, BlinkMacSystemFont, "Segoe UI", Roboto, sans - serif;
+    }
+    body {
+    background:
+      var(--bg - main);
+    color:
+      var(--text - dark);
+    display:
+      flex;
+      justify - content : center;
+      min - height : 100vh;
+      padding - bottom : 80px;
+    }
+    .app - shell {
+    width:
+      100 % ;
+      max - width : 540px;
+    padding:
+      20px 18px 90px;
+    position:
+      relative;
+    }
+
+    /* Typography & Header */
+    h1 {
+      font - size : 26px;
+      font - weight : 800;
+    color:
+      var(--text - dark);
+      margin - bottom : 14px;
+      letter - spacing : -0.5px;
+    }
+    h2 {
+      font - size : 19px;
+      font - weight : 700;
+    margin:
+      16px 0 10px;
+    display:
+      flex;
+      align - items : center;
+    gap:
+      6px;
+    }
+    .info - badge {
+    display:
+      inline - flex;
+    width:
+      20px;
+    height:
+      20px;
+      border - radius : 50 % ;
+    background:
+      var(--sage - mid);
+    color:
+#fff;
+      font - size : 12px;
+      align - items : center;
+      justify - content : center;
+    cursor:
+      pointer;
+    }
+
+    /* Scenario Dropdown & Mode Pill */
+    .top - center - wrap {
+    display:
+      flex;
+      justify - content : center;
+      margin - bottom : 14px;
+    gap:
+      10px;
+      align - items : center;
+    }
+    .scenario - select {
+    background:
+      var(--sage - mid);
+    color:
+#fff;
+      font - weight : 700;
+      font - size : 14px;
+    padding:
+      10px 24px;
+      border - radius : 999px;
+    border:
+      2px solid var(--sage - dark);
+    cursor:
+      pointer;
+      text - transform : uppercase;
+      letter - spacing : 0.5px;
+    outline:
+      none;
+    }
+    .lang - btn {
+    background:
+      var(--bg - card);
+    color:
+      var(--sage - dark);
+    border:
+      1.5px solid var(--sage - mid);
+    padding:
+      8px 12px;
+      border - radius : 999px;
+      font - size : 12px;
+      font - weight : 700;
+    cursor:
+      pointer;
+    }
+
+    /* Visualization Text Box */
+    .viz - box {
+    background:
+      var(--bg - card);
+      border - radius : 20px;
+    padding:
+      20px;
+      min - height : 270px;
+      box - shadow : inset 0 1px 4px rgba(0, 0, 0, 0.04);
+      line - height : 1.75;
+      font - size : 15px;
+      white - space : pre - wrap;
+      font - family : "SF Pro Text", system - ui, sans - serif;
+    transition:
+      all 0.25s ease;
+    }
+    .char - fade - sev {
+    opacity:
+      0.22;
+    filter:
+      blur(2.6px);
+    transition:
+      0.25s;
+    }
+
+    /* Hearing Loss Level Stepper Slider */
+    .slider - container {
+    margin:
+      22px 0 16px;
+    padding:
+      0 10px;
+    }
+    .level - track - wrap {
+    position:
+      relative;
+    display:
+      flex;
+      justify - content : space - between;
+      align - items : center;
+      margin - bottom : 10px;
+    }
+    .level - line {
+    position:
+      absolute;
+    top:
+      50 % ;
+    left:
+      12px;
+    right:
+      12px;
+    height:
+      4px;
+    background:
+#E3F2DA;
+      z - index : 1;
+    transform:
+      translateY(-50 %);
+    }
+    .level - node {
+    width:
+      24px;
+    height:
+      24px;
+      border - radius : 50 % ;
+    background:
+      var(--accent - green);
+    border:
+      3px solid #fff;
+      z - index : 2;
+    cursor:
+      pointer;
+    transition:
+      all 0.2s ease;
+    }
+    .level - node.active {
+    width:
+      30px;
+    height:
+      30px;
+    background:
+      var(--sage - mid);
+    border:
+      3px solid var(--sage - dark);
+      box - shadow : 0 2px 8px rgba(75, 94, 72, 0.35);
+    }
+    .level - labels {
+    display:
+      flex;
+      justify - content : space - between;
+      font - size : 13px;
+      font - weight : 600;
+    color:
+      var(--text - dark);
+    }
+
+    /* Play Button */
+    .play - wrap {
+    display:
+      flex;
+      flex - direction : column;
+      align - items : center;
+    gap:
+      8px;
+      margin - top : 16px;
+    }
+    .play - btn {
+    width:
+      64px;
+    height:
+      64px;
+      border - radius : 50 % ;
+    background:
+      var(--sage - mid);
+    border:
+      3px solid var(--sage - dark);
+    color:
+#fff;
+      font - size : 26px;
+    display:
+      flex;
+      align - items : center;
+      justify - content : center;
+    cursor:
+      pointer;
+      box - shadow : 0 4px 12px rgba(0, 0, 0, 0.12);
+    transition:
+      transform 0.15s;
+    }
+    .play - btn : active {
+    transform:
+      scale(0.94);
+    }
+    .audio - status {
+      font - size : 12px;
+    color:
+      var(--text - muted);
+      font - weight : 600;
+      text - align : center;
+    }
+
+    /* Tab 3: Interactive Audiogram */
+    .segmented - toggle {
+    display:
+      flex;
+    background:
+      var(--bg - card);
+      border - radius : 999px;
+    padding:
+      4px;
+    width:
+      240px;
+    margin:
+      0 auto 12px;
+    border:
+      1px solid var(--sage - light);
+    }
+    .seg - btn {
+    flex:
+      1;
+      text - align : center;
+    padding:
+      8px 0;
+      border - radius : 999px;
+      font - size : 13px;
+      font - weight : 700;
+    cursor:
+      pointer;
+    color:
+      var(--sage - mid);
+    transition:
+      0.2s;
+    }
+    .seg - btn.active {
+    background:
+      var(--sage - dark);
+    color:
+#fff;
+    }
+    .audiogram - board {
+    position:
+      relative;
+    background:
+      var(--bg - card);
+      border - radius : 18px;
+    padding:
+      16px 10px 16px 36px;
+    height:
+      370px;
+      user - select : none;
+    overflow:
+      hidden;
+    border:
+      1px solid var(--sage - light);
+    }
+    .sound - item {
+    position:
+      absolute;
+    transform:
+      translate(-50 %, -50 %);
+    display:
+      flex;
+      flex - direction : column;
+      align - items : center;
+    cursor:
+      pointer;
+    transition:
+      filter 0.3s ease, opacity 0.3s ease, transform 0.2s;
+      z - index : 3;
+    }
+    .sound - item : hover {
+    transform:
+      translate(-50 %, -50 %) scale(1.12);
+    }
+    .sound - item.emoji {
+      font - size : 26px;
+    filter:
+      drop - shadow(0 2px 3px rgba(0, 0, 0, 0.12));
+    }
+    .sound - item.phoneme - cluster {
+      font - size : 13px;
+      font - weight : 800;
+    color:
+# 3B82F6;
+    background:
+      rgba(255, 255, 255, 0.75);
+    padding:
+      2px 6px;
+      border - radius : 6px;
+    }
+    .sound - item.inaudible {
+    filter:
+      grayscale(100 %);
+    opacity:
+      0.22;
+      pointer - events : none;
+    }
+    .legend - row {
+    display:
+      flex;
+    gap:
+      10px;
+      margin - top : 12px;
+      font - size : 12px;
+      justify - content : space - between;
+    }
+    .legend - card {
+    flex:
+      1;
+    background:
+      var(--bg - card);
+    padding:
+      10px;
+      border - radius : 12px;
+      text - align : center;
+      font - weight : 600;
+    }
+
+    /* Tab 2: Dr. Bunny Chat */
+    .chat - box {
+    background:
+      var(--bg - card);
+      border - radius : 20px;
+    padding:
+      16px;
+    height:
+      360px;
+      overflow - y : auto;
+    display:
+      flex;
+      flex - direction : column;
+    gap:
+      12px;
+    }
+    .msg {
+      max - width : 85 % ;
+    padding:
+      12px 14px;
+      border - radius : 16px;
+      font - size : 14px;
+      line - height : 1.5;
+    }
+    .msg.bot {
+    background:
+#fff;
+      align - self : flex - start;
+      border - bottom - left - radius : 4px;
+      box - shadow : 0 2px 5px rgba(0, 0, 0, 0.04);
+    }
+    .msg.user {
+    background:
+      var(--sage - dark);
+    color:
+#fff;
+      align - self : flex - end;
+      border - bottom - right - radius : 4px;
+    }
+    .quick - pills {
+    display:
+      flex;
+      flex - wrap : wrap;
+    gap:
+      6px;
+      margin - top : 10px;
+    }
+    .pill - btn {
+    background:
+#fff;
+    border:
+      1.5px solid var(--sage - mid);
+    color:
+      var(--sage - dark);
+    padding:
+      7px 12px;
+      border - radius : 999px;
+      font - size : 12px;
+      font - weight : 600;
+    cursor:
+      pointer;
+    }
+    .pill - btn : hover {
+    background:
+      var(--sage - light);
+    }
+    .chat - input - row {
+    display:
+      flex;
+    gap:
+      8px;
+      margin - top : 10px;
+    }
+    .chat - input {
+    flex:
+      1;
+    padding:
+      10px 14px;
+      border - radius : 999px;
+    border:
+      1.5px solid var(--sage - light);
+    outline:
+      none;
+    }
+    .send - btn {
+    background:
+      var(--sage - dark);
+    color:
+#fff;
+    border:
+      none;
+    padding:
+      0 18px;
+      border - radius : 999px;
+      font - weight : 700;
+    cursor:
+      pointer;
+    }
+
+    /* Mascot & Bottom Nav */
+    .mascot - float {
+    position:
+      fixed;
+    bottom:
+      68px;
+    left:
+      max(16px, calc(50 % -255px));
+      font - size : 46px;
+      z - index : 20;
+    filter:
+      drop - shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+    cursor:
+      pointer;
+    }
+    .bottom - nav {
+    position:
+      fixed;
+    bottom:
+      0;
+    left:
+      0;
+    right:
+      0;
+    height:
+      64px;
+    background:
+      var(--bg - card);
+      border - top : 1px solid var(--sage - light);
+    display:
+      flex;
+      justify - content : center;
+      z - index : 30;
+    }
+    .nav - inner {
+    width:
+      100 % ;
+      max - width : 540px;
+    display:
+      flex;
+      justify - content : space - around;
+      align - items : center;
+    }
+    .nav - tab {
+    display:
+      flex;
+      align - items : center;
+    gap:
+      6px;
+      font - size : 14px;
+      font - weight : 700;
+    color:
+      var(--text - muted);
+    cursor:
+      pointer;
+    padding:
+      8px 16px;
+      border - radius : 12px;
+    }
+    .nav - tab.active {
+    color:
+      var(--text - dark);
+    background:
+      rgba(110, 130, 107, 0.15);
+    }
+    .tab - pane {
+    display:
+      none;
+    }
+    .tab - pane.active {
+    display:
+      block;
+    }

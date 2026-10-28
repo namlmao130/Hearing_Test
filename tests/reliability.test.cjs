@@ -2,12 +2,12 @@
 // Deterministic storage and asynchronous page-handler tests. No browser, audio,
 // localStorage or network is used; promises let us control cancellation timing.
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
 const vm = require('node:vm');
-const S = require('./session-store.js');
-const C = require('./hearing-core.js');
-const B = require('./bayesian-core.js');
-const page = fs.readFileSync(__dirname + '/Tu-do-thinh-luc.html','utf8');
+const project = require('./project.cjs');
+const S = require('../src/storage/session-store.js');
+const C = require('../src/core/hearing-core.js');
+const B = require('../src/core/bayesian-core.js');
+const page = project.selfTestSource(), html = project.read('Tu-do-thinh-luc.html');
 const slice = (start,end) => {
   const a=page.indexOf(start), b=page.indexOf(end,a+start.length);
   assert.ok(a>=0 && b>a, `page handler exists: ${start}`);
@@ -78,7 +78,7 @@ function pageStorageTests(){
   vm.createContext(context);vm.runInContext(slice('let sessions=[];','async function audio()'),context);
   context.session=context.createSession('tone');context.session.config={ears:['L']};context.save();
   assert.equal(S.decode(memory.raw).rejected.length,0,'actual create/save bridge produces compatible records');
-  assert.equal(JSON.parse(memory.raw)[0].appVersion,'3.1-reliability-research');
+  assert.equal(JSON.parse(memory.raw)[0].appVersion,'3.2-professional-src');
   memory.fail=true;context.save();assert.equal(ui.storageWarning.hidden,false);
   assert.match(ui.storageWarning.textContent,/Chưa lưu được/);
   // Loading a corrupt payload through the actual page bridge must never
@@ -160,10 +160,10 @@ async function importTests(){
   assert.equal(ui.importHistory.disabled,true,'stale import must not unlock a newer operation');
 }
 (async()=>{
-  for(const match of page.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)) if(match[1].trim())new vm.Script(match[1]);
-  assert.ok(page.includes('<script src="session-store.js"></script>'));
+  for(const file of project.SELF_TEST_FILES)new vm.Script(project.read(file),{filename:file});
+  assert.ok(html.includes('<script src="src/storage/session-store.js"></script>'));
   const browser={};vm.createContext(browser);
-  for(const file of ['hearing-core.js','bayesian-core.js','session-store.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+file,'utf8'),browser);
+  for(const file of ['src/core/hearing-core.js','src/core/bayesian-core.js','src/storage/session-store.js'])vm.runInContext(project.read(file),browser);
   assert.equal(browser.HearingSessionStore.decode(JSON.stringify([fixture()])).sessions.length,1,'browser globals load without CommonJS');
   storageTests();pageStorageTests();await speechTests();await toneTests();await importTests();
   console.log('PASS: storage schema, corruption preservation, quota, stale-tab conflict, JSON recovery, v3 evidence gate and asynchronous cancellation.');
